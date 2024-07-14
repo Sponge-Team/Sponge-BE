@@ -7,8 +7,8 @@ on:
 
 env:
   ECR_REPOSITORY: sponge-application
-  ECS_SERVICE: sponge-service
-  ECS_CLUSTER: sponge-cluster
+  ECS_SERVICE: sponge-task-service
+  ECS_CLUSTER: sponge-application-ecs
   ECS_TASK_DEFINITION: task-definition.json # set this to the path to your Amazon ECS task definition
   CONTAINER_NAME: sponge-container
 
