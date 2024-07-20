@@ -1,17 +1,14 @@
+# Set the base image to use, in this case, adoptopenjdk with Java 17
 FROM bellsoft/liberica-openjdk-alpine:17
 
+# Set the working directory in the container
 WORKDIR /app
 
-COPY . .
+# Copy the application JAR file into the container at /app
+COPY build/libs/sponge-1.0.jar /app/
 
-# 개행문자 오류 해결
-RUN sed -i 's/\r$//' gradlew
+# Expose the port that the application will run on
+EXPOSE 8080
 
-
-RUN chmod +x ./gradlew
-RUN ./gradlew clean build
-
-ENV JAR_PATH=/app/build/libs
-RUN mv ${JAR_PATH}/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Define the command to run your application
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "-Duser.timezone=Asia/Seoul", "/app/sponge-1.0.jar"]
