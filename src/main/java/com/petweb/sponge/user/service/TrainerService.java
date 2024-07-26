@@ -18,8 +18,17 @@ public class TrainerService {
 
 
     /**
+     * 훈련사 조회
+     * @param trainerId
+     * @return
+     */
+    public TrainerDTO findTrainer(Long trainerId) {
+        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
+        return toDTO(trainer);
+    }
+
+    /**
      * 훈련사 정보저장
-     * Controller에서 넘어온 trainerDTO를 Trainer 엔티티에 넣어주고 Repository로 전달
      * @param trainerDTO
      * @return
      */
@@ -65,5 +74,6 @@ public class TrainerService {
                 trainerDTO.getTown(),
                 user);
     }
+
 
 }

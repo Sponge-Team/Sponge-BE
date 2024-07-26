@@ -34,6 +34,13 @@ public class Trainer {
         this.user = user;
     }
 
-
-
+    public Trainer(Long id, String content, int years, String history, int city, int town, User user) {
+        this.id = id;
+        this.content = content;
+        this.years = years;
+        this.history = history;
+        this.city = city;
+        this.town = town;
+        this.user = user;
+    }
 }

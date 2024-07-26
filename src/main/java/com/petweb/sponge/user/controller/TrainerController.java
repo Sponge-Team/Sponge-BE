@@ -14,11 +14,18 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
+    @GetMapping("/{trainerId}")
+    public ResponseEntity<TrainerDTO> getTrainer(@PathVariable("trainerId") Long trainerId) {
+        TrainerDTO trainer = trainerService.findTrainer(trainerId);
+        return new ResponseEntity<>(trainer,HttpStatus.OK);
+    }
+
     @PostMapping()
     public ResponseEntity<TrainerDTO> signup(@RequestBody TrainerDTO trainerDTO) {
         TrainerDTO trainer = trainerService.saveTrainer(trainerDTO);
         return new ResponseEntity<>(trainer,HttpStatus.OK);
     }
+
 
 
 }

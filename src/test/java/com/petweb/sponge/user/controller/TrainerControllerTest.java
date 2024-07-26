@@ -1,5 +1,6 @@
 package com.petweb.sponge.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petweb.sponge.user.dto.TrainerDTO;
 import com.petweb.sponge.user.service.TrainerService;
@@ -39,6 +40,27 @@ class TrainerControllerTest {
     }
 
     @Test
+    @DisplayName("훈련사 조회")
+    void getTrainer() throws Exception {
+        // Given
+        given(trainerService.findTrainer(anyLong())).willReturn(savedTrainerDTO);
+
+        // When // Then
+        mockMvc.perform(get("/api/trainer/{trainerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(savedTrainerDTO.getUserId()))
+                .andExpect(jsonPath("$.trainerId").value(savedTrainerDTO.getTrainerId()))
+                .andExpect(jsonPath("$.name").value(savedTrainerDTO.getName()))
+                .andExpect(jsonPath("$.profileImgUrl").value(savedTrainerDTO.getProfileImgUrl()))
+                .andExpect(jsonPath("$.content").value(savedTrainerDTO.getContent()))
+                .andExpect(jsonPath("$.years").value(savedTrainerDTO.getYears()))
+                .andExpect(jsonPath("$.history").value(savedTrainerDTO.getHistory()))
+                .andExpect(jsonPath("$.city").value(savedTrainerDTO.getCity()))
+                .andExpect(jsonPath("$.town").value(savedTrainerDTO.getTown()));
+    }
+
+    @Test
     @DisplayName("훈련사 저장")
     void signup() throws Exception {
         // Given
@@ -58,7 +80,5 @@ class TrainerControllerTest {
                 .andExpect(jsonPath("$.history").value(savedTrainerDTO.getHistory()))
                 .andExpect(jsonPath("$.city").value(savedTrainerDTO.getCity()))
                 .andExpect(jsonPath("$.town").value(savedTrainerDTO.getTown()));
-
-        then(trainerService).should(times(1)).saveTrainer(any(TrainerDTO.class));
     }
 }

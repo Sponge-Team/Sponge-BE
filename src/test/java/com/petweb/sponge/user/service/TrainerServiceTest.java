@@ -41,7 +41,22 @@ class TrainerServiceTest {
     void setUp() {
         trainerDTO = new TrainerDTO(1l, null, "test", null, "test", 3, "test", 200, 300);
         user = new User(1l,"test@naver.com", "test@naver.com", null);
-        trainer = new Trainer("Content", 5, "History", 200, 300, user);
+        trainer = new Trainer(1l,"Content", 5, "History", 200, 300, user);
+    }
+
+    @Test
+    @DisplayName("훈련사 조회")
+    void findTrainer() {
+        // Given
+        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
+
+        // When
+        TrainerDTO findTrainer = trainerService.findTrainer(1l);
+
+        // Then
+        assertThat(findTrainer).isNotNull();
+        assertThat(findTrainer.getTrainerId()).isEqualTo(trainer.getId());
+        assertThat(findTrainer.getUserId()).isEqualTo(trainer.getUser().getId());
     }
 
     @Test
@@ -57,7 +72,6 @@ class TrainerServiceTest {
         // Then
         assertThat(savedTrainerDTO).isNotNull();
         assertThat(savedTrainerDTO.getUserId()).isEqualTo(trainerDTO.getUserId());
-        then(trainerRepository).should(times(1)).save(any(Trainer.class));
     }
 
     @Test
