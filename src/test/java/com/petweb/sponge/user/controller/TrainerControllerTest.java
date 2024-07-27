@@ -40,7 +40,7 @@ class TrainerControllerTest {
     }
 
     @Test
-    @DisplayName("훈련사 조회")
+    @DisplayName("훈련사 정보 단건 조회")
     void getTrainer() throws Exception {
         // Given
         given(trainerService.findTrainer(anyLong())).willReturn(savedTrainerDTO);
@@ -61,7 +61,7 @@ class TrainerControllerTest {
     }
 
     @Test
-    @DisplayName("훈련사 저장")
+    @DisplayName("훈련사 정보 저장")
     void signup() throws Exception {
         // Given
         given(trainerService.saveTrainer(any(TrainerDTO.class))).willReturn(savedTrainerDTO);
@@ -83,11 +83,11 @@ class TrainerControllerTest {
     }
 
     @Test
-    @DisplayName("훈련사 수정")
+    @DisplayName("훈련사 정보 수정")
     void modifyTrainer() throws Exception {
         // Given
         TrainerDTO updateDto = new TrainerDTO(1L,1L, "update", "testImgUrl", "update content", 10, "update test", 100, 200);
-        given(trainerService.updateTrainer(anyLong(),any(TrainerDTO.class))).willReturn(updateDto);
+        given(trainerService.findTrainer(anyLong())).willReturn(updateDto);
 
         // When // Then
         mockMvc.perform(put("/api/trainer/{trainerId}", 1L)
@@ -103,5 +103,11 @@ class TrainerControllerTest {
                 .andExpect(jsonPath("$.history").value(updateDto.getHistory()))
                 .andExpect(jsonPath("$.city").value(updateDto.getCity()))
                 .andExpect(jsonPath("$.town").value(updateDto.getTown()));
+    }
+
+    @Test
+    @DisplayName("훈련사 정보 삭제")
+    void removeTrainer() {
+
     }
 }

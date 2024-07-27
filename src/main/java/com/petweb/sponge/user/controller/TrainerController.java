@@ -44,9 +44,17 @@ public class TrainerController {
      */
     @PutMapping("/{trainerId}")
     public ResponseEntity<TrainerDTO> modifyTrainer(@PathVariable("trainerId") Long trainerId, @RequestBody TrainerDTO trainerDTO) {
-        TrainerDTO trainer = trainerService.updateTrainer(trainerId, trainerDTO);
+        trainerService.updateTrainer(trainerId, trainerDTO);
+        TrainerDTO trainer = trainerService.findTrainer(trainerId);
         return new ResponseEntity<>(trainer,HttpStatus.OK);
     }
 
-
+    /**
+     * 훈련사 정보 삭제
+     * @param trainerId
+     */
+    @DeleteMapping("/{trainerId}")
+    public void removeTrainer(@PathVariable("trainerId") Long trainerId) {
+        trainerService.deleteTrainer(trainerId);
+    }
 }

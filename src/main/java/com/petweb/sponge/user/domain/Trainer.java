@@ -64,6 +64,7 @@ public class Trainer {
         this.user = user;
     }
 
+
     /**
      * 훈련사 정보 수정 메소드
      * @param content

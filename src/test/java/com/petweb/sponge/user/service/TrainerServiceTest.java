@@ -45,7 +45,7 @@ class TrainerServiceTest {
     }
 
     @Test
-    @DisplayName("훈련사 조회")
+    @DisplayName("훈련사 정보 단건 조회")
     void findTrainer() {
         // Given
         given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
@@ -60,7 +60,7 @@ class TrainerServiceTest {
     }
 
     @Test
-    @DisplayName("훈련사 저장")
+    @DisplayName("훈련사 정보 저장")
     void saveTrainer() {
         // Given
         given(userRepository.findById(trainerDTO.getUserId())).willReturn(Optional.of(user));
@@ -96,18 +96,16 @@ class TrainerServiceTest {
         TrainerDTO updateDto = new TrainerDTO(trainer.getUser().getId(), trainer.getId(), "update", "testImgUrl", "update content", 10, "update test", 100, 200);
         trainer.changeTrainerInfo(updateDto.getContent(), updateDto.getYears(), updateDto.getHistory(), updateDto.getCity(), updateDto.getTown());
         user.changeUserInfo(updateDto.getName(), updateDto.getProfileImgUrl());
-        given(trainerRepository.save(any(Trainer.class))).willReturn(trainer);
 
         // When
-        TrainerDTO savedTrainerDto = trainerService.updateTrainer(trainer.getId(), updateDto);
-
-        // Then
-        assertThat(savedTrainerDto.getContent()).isEqualTo(trainer.getContent());
-        assertThat(savedTrainerDto.getProfileImgUrl()).isEqualTo(trainer.getUser().getProfileImgUrl());
-        assertThat(savedTrainerDto.getTrainerId()).isEqualTo(trainer.getUser().getId());
-
+        trainerService.updateTrainer(trainer.getId(), updateDto);
 
     }
 
+    @Test
+    @DisplayName("훈련사 정보 삭제")
+    void deleteTrainer() {
+
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.petweb.sponge.user.domain;
 
-import com.petweb.sponge.user.domain.Trainer;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,6 +31,12 @@ public class User {
 
     @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
     private Trainer trainer;
+
+    public User(String email, String name, String profileImgUrl) {
+        this.email = email;
+        this.name = name;
+        this.profileImgUrl = profileImgUrl;
+    }
 
     /**
      * Test를 위한 생성자

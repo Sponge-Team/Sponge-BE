@@ -19,13 +19,15 @@ public class TrainerService {
 
     /**
      * 훈련사 조회
-     *
      * @param trainerId
      * @return
      */
     @Transactional(readOnly = true)
     public TrainerDTO findTrainer(Long trainerId) {
         Trainer trainer = trainerRepository.findByTrainerId(trainerId);
+        if (trainer == null) {
+            throw new RuntimeException("Trainer not found");
+        }
         return toDTO(trainer);
     }
 
@@ -46,14 +48,13 @@ public class TrainerService {
     }
 
     /**
-     * 훈련사 정보 수정 (더티 체킹 이용)
-     *
+     * 훈련사 정보 수정 (변경 감지)
      * @param trainerId
      * @param trainerDTO
      * @return
      */
     @Transactional
-    public TrainerDTO updateTrainer(Long trainerId, TrainerDTO trainerDTO) {
+    public void updateTrainer(Long trainerId, TrainerDTO trainerDTO) {
         Trainer trainer = trainerRepository.findByTrainerId(trainerId);
 
         if (trainer == null) {
@@ -69,8 +70,19 @@ public class TrainerService {
         User user = trainer.getUser();
         user.changeUserInfo(trainerDTO.getName(),trainerDTO.getProfileImgUrl());
 
-        Trainer savedTrainer = trainerRepository.save(trainer);
-        return toDTO(savedTrainer);
+    }
+
+    /**
+     * 훈련사 정보 삭제
+     * @param trainerId
+     */
+    public void deleteTrainer(Long trainerId) {
+        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
+        if (trainer == null) {
+            throw new RuntimeException("Trainer not found");
+        }
+        trainerRepository.deleteById(trainerId);
+        userRepository.deleteById(trainer.getUser().getId());
     }
 
 
@@ -107,6 +119,7 @@ public class TrainerService {
                 trainerDTO.getTown(),
                 user);
     }
+
 
 
 }
