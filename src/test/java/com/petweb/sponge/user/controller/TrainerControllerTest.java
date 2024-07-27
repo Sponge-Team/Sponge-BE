@@ -35,8 +35,8 @@ class TrainerControllerTest {
 
     @BeforeEach
     void setUp() {
-        trainerDTO = new TrainerDTO(1l, null, "test", null, "test", 3, "test", 200, 300);
-        savedTrainerDTO = new TrainerDTO(1l, 1l, "test", null, "test", 3, "test", 200, 300);
+        trainerDTO = new TrainerDTO(1L, null, "test", "", "test", 3, "test", 200, 300);
+        savedTrainerDTO = new TrainerDTO(1L, 1L, "test", "", "test", 3, "test", 200, 300);
     }
 
     @Test
@@ -80,5 +80,28 @@ class TrainerControllerTest {
                 .andExpect(jsonPath("$.history").value(savedTrainerDTO.getHistory()))
                 .andExpect(jsonPath("$.city").value(savedTrainerDTO.getCity()))
                 .andExpect(jsonPath("$.town").value(savedTrainerDTO.getTown()));
+    }
+
+    @Test
+    @DisplayName("훈련사 수정")
+    void modifyTrainer() throws Exception {
+        // Given
+        TrainerDTO updateDto = new TrainerDTO(1L,1L, "update", "testImgUrl", "update content", 10, "update test", 100, 200);
+        given(trainerService.updateTrainer(anyLong(),any(TrainerDTO.class))).willReturn(updateDto);
+
+        // When // Then
+        mockMvc.perform(put("/api/trainer/{trainerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(updateDto.getUserId()))
+                .andExpect(jsonPath("$.trainerId").value(updateDto.getTrainerId()))
+                .andExpect(jsonPath("$.name").value(updateDto.getName()))
+                .andExpect(jsonPath("$.profileImgUrl").value(updateDto.getProfileImgUrl()))
+                .andExpect(jsonPath("$.content").value(updateDto.getContent()))
+                .andExpect(jsonPath("$.years").value(updateDto.getYears()))
+                .andExpect(jsonPath("$.history").value(updateDto.getHistory()))
+                .andExpect(jsonPath("$.city").value(updateDto.getCity()))
+                .andExpect(jsonPath("$.town").value(updateDto.getTown()));
     }
 }

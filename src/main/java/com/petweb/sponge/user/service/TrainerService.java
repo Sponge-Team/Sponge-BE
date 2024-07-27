@@ -19,9 +19,11 @@ public class TrainerService {
 
     /**
      * 훈련사 조회
+     *
      * @param trainerId
      * @return
      */
+    @Transactional(readOnly = true)
     public TrainerDTO findTrainer(Long trainerId) {
         Trainer trainer = trainerRepository.findByTrainerId(trainerId);
         return toDTO(trainer);
@@ -29,6 +31,7 @@ public class TrainerService {
 
     /**
      * 훈련사 정보저장
+     *
      * @param trainerDTO
      * @return
      */
@@ -42,9 +45,39 @@ public class TrainerService {
         return toDTO(saveTrainer);
     }
 
+    /**
+     * 훈련사 정보 수정 (더티 체킹 이용)
+     * @param trainerId
+     * @param trainerDTO
+     * @return
+     */
+    @Transactional
+    public TrainerDTO updateTrainer(Long trainerId, TrainerDTO trainerDTO) {
+        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
+
+        if (trainer == null) {
+            throw new RuntimeException("Trainer not found");
+        }
+        //trainer 수정
+        trainer.setContent(trainerDTO.getContent());
+        trainer.setYears(trainerDTO.getYears());
+        trainer.setHistory(trainerDTO.getHistory());
+        trainer.setCity(trainerDTO.getCity());
+        trainer.setTown(trainerDTO.getTown());
+
+        //user 수정
+        User user = trainer.getUser();
+        user.setName(trainerDTO.getName());
+        user.setProfileImgUrl(trainerDTO.getProfileImgUrl());
+
+        Trainer savedTrainer = trainerRepository.save(trainer);
+        return toDTO(savedTrainer);
+    }
+
 
     /**
      * trainer 엔티티 -> DTO 변환
+     *
      * @param trainer
      * @return
      */
@@ -62,11 +95,12 @@ public class TrainerService {
 
     /**
      * DTO -> trainer 엔티티
+     *
      * @param trainerDTO
      * @param user
      * @return
      */
-    private Trainer toEntity(TrainerDTO trainerDTO,User user) {
+    private Trainer toEntity(TrainerDTO trainerDTO, User user) {
         return new Trainer(trainerDTO.getContent(),
                 trainerDTO.getYears(),
                 trainerDTO.getHistory(),

@@ -39,9 +39,9 @@ class TrainerServiceTest {
 
     @BeforeEach
     void setUp() {
-        trainerDTO = new TrainerDTO(1l, null, "test", null, "test", 3, "test", 200, 300);
-        user = new User(1l,"test@naver.com", "test@naver.com", null);
-        trainer = new Trainer(1l,"Content", 5, "History", 200, 300, user);
+        trainerDTO = new TrainerDTO(1l, null, "test", "", "test", 3, "test", 200, 300);
+        user = new User(1l, "test@naver.com", "test@naver.com", "");
+        trainer = new Trainer(1l, "Content", 5, "History", 200, 300, user);
     }
 
     @Test
@@ -80,12 +80,39 @@ class TrainerServiceTest {
         // Given
         given(userRepository.findById(trainerDTO.getUserId())).willReturn(Optional.empty());
 
-        // When //then
+        // When // Then
         assertThatThrownBy(() -> trainerService.saveTrainer(trainerDTO))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Not Found User");
         then(userRepository).should(times(1)).findById(trainerDTO.getUserId());
         then(trainerRepository).shouldHaveNoInteractions();
+    }
+
+    @Test
+    @DisplayName("훈련사 정보 수정")
+    void updateTrainer() {
+        // Given
+        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
+
+        TrainerDTO updateDto = new TrainerDTO(trainer.getUser().getId(), trainer.getId(), "update", "testImgUrl", "update content", 10, "update test", 100, 200);
+        trainer.setContent(updateDto.getContent());
+        trainer.setTown(updateDto.getTown());
+        trainer.setCity(updateDto.getCity());
+        trainer.setYears(updateDto.getYears());
+        trainer.setHistory(updateDto.getHistory());
+        trainer.getUser().setName(updateDto.getName());
+        trainer.getUser().setProfileImgUrl(updateDto.getProfileImgUrl());
+        given(trainerRepository.save(any(Trainer.class))).willReturn(trainer);
+
+        // When
+        TrainerDTO savedTrainerDto = trainerService.updateTrainer(trainer.getId(), updateDto);
+
+        // Then
+        assertThat(savedTrainerDto.getContent()).isEqualTo(trainer.getContent());
+        assertThat(savedTrainerDto.getProfileImgUrl()).isEqualTo(trainer.getUser().getProfileImgUrl());
+        assertThat(savedTrainerDto.getTrainerId()).isEqualTo(trainer.getUser().getId());
+
+
     }
 
 
