@@ -47,6 +47,7 @@ public class TrainerService {
 
     /**
      * 훈련사 정보 수정 (더티 체킹 이용)
+     *
      * @param trainerId
      * @param trainerDTO
      * @return
@@ -59,16 +60,14 @@ public class TrainerService {
             throw new RuntimeException("Trainer not found");
         }
         //trainer 수정
-        trainer.setContent(trainerDTO.getContent());
-        trainer.setYears(trainerDTO.getYears());
-        trainer.setHistory(trainerDTO.getHistory());
-        trainer.setCity(trainerDTO.getCity());
-        trainer.setTown(trainerDTO.getTown());
-
+        trainer.changeTrainerInfo(trainerDTO.getContent()
+                , trainerDTO.getYears()
+                , trainerDTO.getHistory()
+                , trainerDTO.getCity()
+                , trainerDTO.getTown());
         //user 수정
         User user = trainer.getUser();
-        user.setName(trainerDTO.getName());
-        user.setProfileImgUrl(trainerDTO.getProfileImgUrl());
+        user.changeUserInfo(trainerDTO.getName(),trainerDTO.getProfileImgUrl());
 
         Trainer savedTrainer = trainerRepository.save(trainer);
         return toDTO(savedTrainer);

@@ -93,15 +93,9 @@ class TrainerServiceTest {
     void updateTrainer() {
         // Given
         given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
-
         TrainerDTO updateDto = new TrainerDTO(trainer.getUser().getId(), trainer.getId(), "update", "testImgUrl", "update content", 10, "update test", 100, 200);
-        trainer.setContent(updateDto.getContent());
-        trainer.setTown(updateDto.getTown());
-        trainer.setCity(updateDto.getCity());
-        trainer.setYears(updateDto.getYears());
-        trainer.setHistory(updateDto.getHistory());
-        trainer.getUser().setName(updateDto.getName());
-        trainer.getUser().setProfileImgUrl(updateDto.getProfileImgUrl());
+        trainer.changeTrainerInfo(updateDto.getContent(), updateDto.getYears(), updateDto.getHistory(), updateDto.getCity(), updateDto.getTown());
+        user.changeUserInfo(updateDto.getName(), updateDto.getProfileImgUrl());
         given(trainerRepository.save(any(Trainer.class))).willReturn(trainer);
 
         // When

@@ -16,6 +16,18 @@ public class TrainerDTO {
     private int city; //광역시,도 코드
     private int town; //구,시
 
+    /**
+     * Test 및 DTO 변환을 위한 생성자
+     * @param userId
+     * @param trainerId
+     * @param name
+     * @param profileImgUrl
+     * @param content
+     * @param years
+     * @param history
+     * @param city
+     * @param town
+     */
     public TrainerDTO(Long userId, Long trainerId, String name, String profileImgUrl, String content, int years, String history, int city, int town) {
         this.userId = userId;
         this.trainerId = trainerId;

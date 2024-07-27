@@ -16,7 +16,6 @@ public class TrainerController {
 
     /**
      * 훈련사 단건조회
-     *
      * @param trainerId
      * @return
      */
@@ -28,7 +27,6 @@ public class TrainerController {
 
     /**
      * 훈련사 정보 저장
-     *
      * @param trainerDTO
      * @return
      */

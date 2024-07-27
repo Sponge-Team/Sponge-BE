@@ -33,12 +33,6 @@ public class User {
     @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
     private Trainer trainer;
 
-    public User(String email, String name, String profileImgUrl) {
-        this.email = email;
-        this.name = name;
-        this.profileImgUrl = profileImgUrl;
-    }
-
     /**
      * Test를 위한 생성자
      * @param id
@@ -53,12 +47,13 @@ public class User {
         this.profileImgUrl = profileImgUrl;
     }
 
-    // JPA 더티체킹 변경감지를 위한 setter 메소드들
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setProfileImgUrl(String profileImgUrl) {
-        this.profileImgUrl = profileImgUrl;
-    }
+    /**
+     * 유저 정보 수정 메소드
+     * @param name
+     * @param profileImgUrl
+     */
+   public void changeUserInfo( String name, String profileImgUrl) {
+       this.name = name;
+       this.profileImgUrl = profileImgUrl;
+   }
 }

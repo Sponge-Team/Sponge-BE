@@ -64,24 +64,19 @@ public class Trainer {
         this.user = user;
     }
 
-    // JPA 더티체킹 변경감지를 위한 setter 메소드들
-    public void setContent(String content) {
+    /**
+     * 훈련사 정보 수정 메소드
+     * @param content
+     * @param years
+     * @param history
+     * @param city
+     * @param town
+     */
+    public void changeTrainerInfo(String content, int years, String history, int city, int town) {
         this.content = content;
-    }
-
-    public void setYears(int years) {
         this.years = years;
-    }
-
-    public void setHistory(String history) {
         this.history = history;
-    }
-
-    public void setCity(int city) {
         this.city = city;
-    }
-
-    public void setTown(int town) {
         this.town = town;
     }
 }
