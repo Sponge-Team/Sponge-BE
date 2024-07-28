@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "Users")
+@Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -29,4 +31,34 @@ public class User {
 
     @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
     private Trainer trainer;
+
+    public User(String email, String name, String profileImgUrl) {
+        this.email = email;
+        this.name = name;
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    /**
+     * Test를 위한 생성자
+     * @param id
+     * @param email
+     * @param name
+     * @param profileImgUrl
+     */
+    public User(Long id, String email, String name, String profileImgUrl) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    /**
+     * 유저 정보 수정 메소드
+     * @param name
+     * @param profileImgUrl
+     */
+   public void changeUserInfo( String name, String profileImgUrl) {
+       this.name = name;
+       this.profileImgUrl = profileImgUrl;
+   }
 }
