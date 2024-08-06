@@ -76,9 +76,9 @@ class TrainerServiceTest {
         user = User.builder()
                 .email("test@naver.com")
                 .build();
-        trainer = Trainer.createTrainer(trainerDTO,user);
-        ReflectionTestUtils.setField(user,"id",1L);
-        ReflectionTestUtils.setField(trainer,"id",1L);
+        trainer = Trainer.createTrainer(trainerDTO, user);
+        ReflectionTestUtils.setField(user, "id", 1L);
+        ReflectionTestUtils.setField(trainer, "id", 1L);
 
     }
 
@@ -124,7 +124,7 @@ class TrainerServiceTest {
                 .hasMessage("Not Found User");
     }
 
-//    @Test
+    //    @Test
 //    @DisplayName("훈련사 정보 수정")
 //    void updateTrainer() {
 //        // Given
@@ -141,6 +141,16 @@ class TrainerServiceTest {
     @Test
     @DisplayName("훈련사 정보 삭제")
     void deleteTrainer() {
+
+        // Given
+        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
+        willDoNothing().given(trainerRepository).deleteById(anyLong());
+        willDoNothing().given(userRepository).deleteById(anyLong());
+
+        // When
+        trainerService.deleteTrainer(1L);
+
+        // Then
 
     }
 

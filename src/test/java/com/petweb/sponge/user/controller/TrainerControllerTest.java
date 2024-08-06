@@ -129,7 +129,14 @@ class TrainerControllerTest {
 //
     @Test
     @DisplayName("훈련사 정보 삭제")
-    void removeTrainer() {
+    void removeTrainer() throws Exception {
+        // Given
+        willDoNothing().given(trainerService).deleteTrainer(anyLong());
+
+        // When  // Then
+        mockMvc.perform(delete("/api/trainer/{trainerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
     }
 }
