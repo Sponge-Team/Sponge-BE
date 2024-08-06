@@ -1,6 +1,8 @@
 package com.petweb.sponge.user.controller;
 
+import com.petweb.sponge.user.domain.Trainer;
 import com.petweb.sponge.user.dto.TrainerDTO;
+import com.petweb.sponge.user.dto.TrainerId;
 import com.petweb.sponge.user.service.TrainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,16 +16,16 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-    /**
-     * 훈련사 단건조회
-     * @param trainerId
-     * @return
-     */
-    @GetMapping("/{trainerId}")
-    public ResponseEntity<TrainerDTO> getTrainer(@PathVariable("trainerId") Long trainerId) {
-        TrainerDTO trainer = trainerService.findTrainer(trainerId);
-        return new ResponseEntity<>(trainer, HttpStatus.OK);
-    }
+//    /**
+//     * 훈련사 단건조회
+//     * @param trainerId
+//     * @return
+//     */
+//    @GetMapping("/{trainerId}")
+//    public ResponseEntity<Trainer> getTrainer(@PathVariable("trainerId") Long trainerId) {
+//        Trainer trainer = trainerService.findTrainer(trainerId);
+//        return new ResponseEntity<>(trainer, HttpStatus.OK);
+//    }
 
     /**
      * 훈련사 정보 저장
@@ -31,30 +33,30 @@ public class TrainerController {
      * @return
      */
     @PostMapping()
-    public ResponseEntity<TrainerDTO> signup(@RequestBody TrainerDTO trainerDTO) {
-        TrainerDTO trainer = trainerService.saveTrainer(trainerDTO);
-        return new ResponseEntity<>(trainer, HttpStatus.OK);
+    public ResponseEntity<TrainerId> signup(@RequestBody TrainerDTO trainerDTO) {
+        TrainerId trainerId = trainerService.saveTrainer(trainerDTO);
+        return new ResponseEntity<>(trainerId, HttpStatus.OK);
     }
 
-    /**
-     * 훈련사 정보 수정
-     * @param trainerId
-     * @param trainerDTO
-     * @return
-     */
-    @PutMapping("/{trainerId}")
-    public ResponseEntity<TrainerDTO> modifyTrainer(@PathVariable("trainerId") Long trainerId, @RequestBody TrainerDTO trainerDTO) {
-        trainerService.updateTrainer(trainerId, trainerDTO);
-        TrainerDTO trainer = trainerService.findTrainer(trainerId);
-        return new ResponseEntity<>(trainer,HttpStatus.OK);
-    }
-
-    /**
-     * 훈련사 정보 삭제
-     * @param trainerId
-     */
-    @DeleteMapping("/{trainerId}")
-    public void removeTrainer(@PathVariable("trainerId") Long trainerId) {
-        trainerService.deleteTrainer(trainerId);
-    }
+//    /**
+//     * 훈련사 정보 수정
+//     * @param trainerId
+//     * @param trainerDTO
+//     * @return
+//     */
+//    @PutMapping("/{trainerId}")
+//    public ResponseEntity<TrainerDTO> modifyTrainer(@PathVariable("trainerId") Long trainerId, @RequestBody TrainerDTO trainerDTO) {
+//        trainerService.updateTrainer(trainerId, trainerDTO);
+//        TrainerDTO trainer = trainerService.findTrainer(trainerId);
+//        return new ResponseEntity<>(trainer,HttpStatus.OK);
+//    }
+//
+//    /**
+//     * 훈련사 정보 삭제
+//     * @param trainerId
+//     */
+//    @DeleteMapping("/{trainerId}")
+//    public void removeTrainer(@PathVariable("trainerId") Long trainerId) {
+//        trainerService.deleteTrainer(trainerId);
+//    }
 }
