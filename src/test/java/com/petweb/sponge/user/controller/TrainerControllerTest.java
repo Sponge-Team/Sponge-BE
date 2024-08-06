@@ -127,9 +127,9 @@ class TrainerControllerTest {
 //                .andExpect(jsonPath("$.town").value(updateDto.getTown()));
 //    }
 //
-//    @Test
-//    @DisplayName("훈련사 정보 삭제")
-//    void removeTrainer() {
-//
-//    }
+    @Test
+    @DisplayName("훈련사 정보 삭제")
+    void removeTrainer() {
+
+    }
 }

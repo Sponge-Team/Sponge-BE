@@ -138,10 +138,10 @@ class TrainerServiceTest {
 //
 //    }
 //
-//    @Test
-//    @DisplayName("훈련사 정보 삭제")
-//    void deleteTrainer() {
-//
-//    }
+    @Test
+    @DisplayName("훈련사 정보 삭제")
+    void deleteTrainer() {
+
+    }
 
 }

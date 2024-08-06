@@ -76,18 +76,18 @@ public class TrainerService {
 //
 //    }
 //
-//    /**
-//     * 훈련사 정보 삭제
-//     * @param trainerId
-//     */
-//    @Transactional
-//    public void deleteTrainer(Long trainerId) {
-//        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
-//        if (trainer == null) {
-//            throw new RuntimeException("Trainer not found");
-//        }
-//        trainerRepository.deleteById(trainerId);
-//        userRepository.deleteById(trainer.getUser().getId());
-//    }
+    /**
+     * 훈련사 정보 삭제
+     * @param trainerId
+     */
+    @Transactional
+    public void deleteTrainer(Long trainerId) {
+        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
+        if (trainer == null) {
+            throw new RuntimeException("Trainer not found");
+        }
+        trainerRepository.deleteById(trainerId);
+        userRepository.deleteById(trainer.getUser().getId());
+    }
 
 }

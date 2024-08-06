@@ -51,12 +51,12 @@ public class TrainerController {
 //        return new ResponseEntity<>(trainer,HttpStatus.OK);
 //    }
 //
-//    /**
-//     * 훈련사 정보 삭제
-//     * @param trainerId
-//     */
-//    @DeleteMapping("/{trainerId}")
-//    public void removeTrainer(@PathVariable("trainerId") Long trainerId) {
-//        trainerService.deleteTrainer(trainerId);
-//    }
+    /**
+     * 훈련사 정보 삭제
+     * @param trainerId
+     */
+    @DeleteMapping("/{trainerId}")
+    public void removeTrainer(@PathVariable("trainerId") Long trainerId) {
+        trainerService.deleteTrainer(trainerId);
+    }
 }
