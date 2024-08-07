@@ -1,12 +1,11 @@
 package com.petweb.sponge.user.repository;
 
-import com.petweb.sponge.user.domain.QTrainer;
-import com.petweb.sponge.user.domain.QUser;
-import com.petweb.sponge.user.domain.Trainer;
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.domain.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
+import static com.petweb.sponge.user.domain.QAddress.*;
+import static com.petweb.sponge.user.domain.QHistory.*;
 import static com.petweb.sponge.user.domain.QTrainer.*;
 import static com.petweb.sponge.user.domain.QUser.*;
 

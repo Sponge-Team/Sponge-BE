@@ -14,34 +14,38 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "users")
+@Table(name = "history")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class History {
+
 
     @Id
     @GeneratedValue
     private Long id;
-    private String email;
-    private String name;
-    private int gender;
-    private String profileImgUrl;
+
+    private String title;
+    private String startDt;
+    private String endDt;
+    private String description;
+
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
     private Timestamp modifiedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
+
     @Builder
-    public User(String email, String name, int gender, String profileImgUrl) {
-        this.email = email;
-        this.name = name;
-        this.gender = gender;
-        this.profileImgUrl = profileImgUrl;
+    public History(String title, String startDt, String endDt, String description) {
+        this.title = title;
+        this.startDt = startDt;
+        this.endDt = endDt;
+        this.description = description;
     }
 
-    public User changeUserInfo(String name, int gender, String profileImgUrl) {
-        this.name = name;
-        this.gender = gender;
-        this.profileImgUrl = profileImgUrl;
-        return this;
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
     }
 }

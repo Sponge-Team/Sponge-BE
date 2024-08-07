@@ -2,6 +2,7 @@ package com.petweb.sponge.user.repository;
 
 import com.petweb.sponge.user.domain.Trainer;
 import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.utils.Gender;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,9 +26,18 @@ class TrainerRepositoryTest {
 
     @BeforeEach
     void setup() {
-        user = new User("test1", "test1", null);
+        user = User.builder()
+                .email("test@naver.com")
+                .name("test")
+                .gender(Gender.MALE.getCode())
+                .profileImgUrl(null)
+                .build();
         userRepository.save(user);
-        trainer = new Trainer("testContent", 1, "testHistory", 100, 200, user);
+        trainer = Trainer.builder()
+                .content("content")
+                .years(2)
+                .user(user)
+                .build();
         trainerRepository.save(trainer);
 
     }
@@ -37,7 +47,6 @@ class TrainerRepositoryTest {
     void findByTrainerId() {
         //when
         Trainer findTrainer = trainerRepository.findByTrainerId(1L);
-
         //then
         assertThat(findTrainer).isSameAs(trainer);
         assertThat(findTrainer.getUser()).isSameAs(user);

@@ -1,9 +1,16 @@
 package com.petweb.sponge.user.domain;
 
+import com.petweb.sponge.user.dto.AddressDTO;
+import com.petweb.sponge.user.dto.HistoryDTO;
+import com.petweb.sponge.user.dto.TrainerDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,71 +20,67 @@ public class Trainer {
 
     @Id
     @GeneratedValue
-    @Column(name = "trainer_id")
     private Long id;
     private String content;
     private int years;
-    private String history;
-    private int city;
-    private int town;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    private List<History> histories = new ArrayList<>();
 
-    /**
-     * Entity 변환을 위한 생성자
-     * @param content
-     * @param years
-     * @param history
-     * @param city
-     * @param town
-     * @param user
-     */
-    public Trainer(String content, int years, String history, int city, int town, User user) {
+    @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL)
+    private List<Address> addresses = new ArrayList<>();
+
+    @Builder
+    public Trainer(String content, int years, User user) {
         this.content = content;
         this.years = years;
-        this.history = history;
-        this.city = city;
-        this.town = town;
         this.user = user;
     }
 
-    /**
-     * Test를 위한 생성자
-     * @param id
-     * @param content
-     * @param years
-     * @param history
-     * @param city
-     * @param town
-     * @param user
-     */
-    public Trainer(Long id, String content, int years, String history, int city, int town, User user) {
-        this.id = id;
-        this.content = content;
-        this.years = years;
-        this.history = history;
-        this.city = city;
-        this.town = town;
-        this.user = user;
+    //==연관관계 메서드==//
+    public void addHistory(History history) {
+        histories.add(history);
+        history.setTrainer(this);
     }
 
-
-    /**
-     * 훈련사 정보 수정 메소드
-     * @param content
-     * @param years
-     * @param history
-     * @param city
-     * @param town
-     */
-    public void changeTrainerInfo(String content, int years, String history, int city, int town) {
-        this.content = content;
-        this.years = years;
-        this.history = history;
-        this.city = city;
-        this.town = town;
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setTrainer(this);
     }
+
+    //==생성 메서드==//
+    public static Trainer createTrainer(TrainerDTO trainerDTO, User user) {
+        Trainer trainer = Trainer.builder()
+                .content(trainerDTO.getContent())
+                .years(trainerDTO.getYears())
+                .user(user)
+                .build();
+
+        List<HistoryDTO> historyList = trainerDTO.getHistoryList();
+
+        //경력 정보 저장
+        for (HistoryDTO historyDTO : historyList) {
+            History history = History.builder()
+                    .title(historyDTO.getTitle())
+                    .startDt(historyDTO.getStartDt())
+                    .endDt(historyDTO.getEndDt())
+                    .description(historyDTO.getDescription()).build();
+            trainer.addHistory(history);
+        }
+        //활동지역 정보 저장
+        List<AddressDTO> addressList = trainerDTO.getAddressList();
+        for (AddressDTO addressDTO : addressList) {
+            Address address = Address.builder()
+                    .city(addressDTO.getCity())
+                    .town(addressDTO.getTown())
+                    .build();
+            trainer.addAddress(address);
+        }
+        return trainer;
+    }
+
 }
