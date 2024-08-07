@@ -82,20 +82,20 @@ class TrainerServiceTest {
 
     }
 
-//    @Test
-//    @DisplayName("훈련사 정보 단건 조회")
-//    void findTrainer() {
-//        // Given
-//        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
-//
-//        // When
-//        TrainerDTO findTrainer = trainerService.findTrainer(1l);
-//
-//        // Then
-//        assertThat(findTrainer).isNotNull();
-//        assertThat(findTrainer.getTrainerId()).isEqualTo(trainer.getId());
-//        assertThat(findTrainer.getUserId()).isEqualTo(trainer.getUser().getId());
-//    }
+    @Test
+    @DisplayName("훈련사 정보 단건 조회")
+    void findTrainer() {
+        // Given
+        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
+
+        // When
+        TrainerDTO findTrainer = trainerService.findTrainer(1L);
+
+        // Then
+        assertThat(findTrainer).isNotNull();
+        assertThat(findTrainer.getTrainerId()).isEqualTo(trainer.getId());
+        assertThat(findTrainer.getUserId()).isEqualTo(trainer.getUser().getId());
+    }
 
     @Test
     @DisplayName("훈련사 정보 저장")

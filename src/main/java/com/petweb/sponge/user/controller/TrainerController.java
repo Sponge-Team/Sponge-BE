@@ -16,16 +16,16 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-//    /**
-//     * 훈련사 단건조회
-//     * @param trainerId
-//     * @return
-//     */
-//    @GetMapping("/{trainerId}")
-//    public ResponseEntity<Trainer> getTrainer(@PathVariable("trainerId") Long trainerId) {
-//        Trainer trainer = trainerService.findTrainer(trainerId);
-//        return new ResponseEntity<>(trainer, HttpStatus.OK);
-//    }
+    /**
+     * 훈련사 단건조회
+     * @param trainerId
+     * @return
+     */
+    @GetMapping("/{trainerId}")
+    public ResponseEntity<TrainerDTO> getTrainer(@PathVariable("trainerId") Long trainerId) {
+        TrainerDTO trainer = trainerService.findTrainer(trainerId);
+        return new ResponseEntity<>(trainer, HttpStatus.OK);
+    }
 
     /**
      * 훈련사 정보 저장

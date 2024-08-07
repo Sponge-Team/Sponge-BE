@@ -69,26 +69,18 @@ class TrainerControllerTest {
                 .build();
         trainerId = TrainerId.builder().trainerId(1L).userId(1L).build();
     }
-//    @Test
-//    @DisplayName("훈련사 정보 단건 조회")
-//    void getTrainer() throws Exception {
-//        // Given
-//        given(trainerService.findTrainer(anyLong())).willReturn(savedTrainerDTO);
-//
-//        // When // Then
-//        mockMvc.perform(get("/api/trainer/{trainerId}", 1L)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.userId").value(savedTrainerDTO.getUserId()))
-//                .andExpect(jsonPath("$.trainerId").value(savedTrainerDTO.getTrainerId()))
-//                .andExpect(jsonPath("$.name").value(savedTrainerDTO.getName()))
-//                .andExpect(jsonPath("$.profileImgUrl").value(savedTrainerDTO.getProfileImgUrl()))
-//                .andExpect(jsonPath("$.content").value(savedTrainerDTO.getContent()))
-//                .andExpect(jsonPath("$.years").value(savedTrainerDTO.getYears()))
-//                .andExpect(jsonPath("$.history").value(savedTrainerDTO.getHistory()))
-//                .andExpect(jsonPath("$.city").value(savedTrainerDTO.getCity()))
-//                .andExpect(jsonPath("$.town").value(savedTrainerDTO.getTown()));
-//    }
+    @Test
+    @DisplayName("훈련사 정보 단건 조회")
+    void getTrainer() throws Exception {
+        // Given
+        given(trainerService.findTrainer(anyLong())).willReturn(trainerDTO);
+
+        // When // Then
+        mockMvc.perform(get("/api/trainer/{trainerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(trainerDTO)));
+    }
 
     @Test
     @DisplayName("훈련사 정보 저장")

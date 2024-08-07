@@ -10,6 +10,7 @@ import java.util.List;
 public class TrainerDTO {
 
     private Long userId; //유저아이디
+    private Long trainerId; //훈련사 아이디
     private String name; //이름
     private int gender; //성별
     private String profileImgUrl; //프로필이미지링크
