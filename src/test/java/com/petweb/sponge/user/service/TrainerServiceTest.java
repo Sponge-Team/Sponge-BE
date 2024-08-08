@@ -1,20 +1,15 @@
 package com.petweb.sponge.user.service;
 
 import com.petweb.sponge.user.domain.Trainer;
-import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.AddressDTO;
 import com.petweb.sponge.user.dto.HistoryDTO;
 import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.dto.TrainerId;
 import com.petweb.sponge.user.repository.TrainerRepository;
-import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.Gender;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,20 +31,20 @@ class TrainerServiceTest {
 
     @Mock
     private TrainerRepository trainerRepository;
-    @Mock
-    private UserRepository userRepository;
 
-
+    private Trainer findTrainer;
     private TrainerDTO trainerDTO;
     private Trainer trainer;
-    private User user;
 
     @BeforeEach
     void setUp() {
+        findTrainer = new Trainer("test");
+        ReflectionTestUtils.setField(findTrainer, "id", 1L);
         trainerDTO = TrainerDTO.builder()
-                .userId(1L)
+                .trainerId(1L)
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
+                .phone("010-0000-0000")
                 .profileImgUrl(null)
                 .content("자기소개")
                 .years(3)
@@ -72,13 +67,7 @@ class TrainerServiceTest {
                                 .build()
                 ))
                 .build();
-
-        user = User.builder()
-                .email("test@naver.com")
-                .build();
-        trainer = Trainer.createTrainer(trainerDTO, user);
-        ReflectionTestUtils.setField(user, "id", 1L);
-        ReflectionTestUtils.setField(trainer, "id", 1L);
+        trainer = findTrainer.settingTrainer(trainerDTO);
 
     }
 
@@ -86,7 +75,7 @@ class TrainerServiceTest {
     @DisplayName("훈련사 정보 단건 조회")
     void findTrainer() {
         // Given
-        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
+        given(trainerRepository.findById(anyLong())).willReturn(Optional.of(trainer));
 
         // When
         TrainerDTO findTrainer = trainerService.findTrainer(1L);
@@ -94,35 +83,37 @@ class TrainerServiceTest {
         // Then
         assertThat(findTrainer).isNotNull();
         assertThat(findTrainer.getTrainerId()).isEqualTo(trainer.getId());
-        assertThat(findTrainer.getUserId()).isEqualTo(trainer.getUser().getId());
     }
 
     @Test
     @DisplayName("훈련사 정보 저장")
     void saveTrainer() {
         // Given
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+
+        given(trainerRepository.findById(anyLong())).willReturn(Optional.of(findTrainer));
         given(trainerRepository.save(any(Trainer.class))).willReturn(trainer);
 
         // When
-        TrainerId trainerId = trainerService.saveTrainer(trainerDTO);
+        trainerService.saveTrainer(trainerDTO);
 
         // Then
-        assertEquals(1L, trainerId.getTrainerId());
-        assertEquals(1L, trainerId.getUserId());
+        assertEquals(trainerDTO.getTrainerId(), trainer.getId());
     }
 
     @Test
-    @DisplayName("userId로 db에 유저가 발견되지 않았을때")
-    void userNotFound() {
+    @DisplayName("훈련사 찾기 실패")
+    public void saveTrainerNotFound() {
         // Given
-        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
+        given(trainerRepository.findById(trainerDTO.getTrainerId())).willReturn(Optional.empty());
 
-        // When // Then
-        assertThatThrownBy(() -> trainerService.saveTrainer(trainerDTO))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("Not Found User");
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            trainerService.saveTrainer(trainerDTO);
+        });
+
+        assertEquals("NO Found Trainer", exception.getMessage());
     }
+
 
     //    @Test
 //    @DisplayName("훈련사 정보 수정")
@@ -138,14 +129,13 @@ class TrainerServiceTest {
 //
 //    }
 //
-    @Test
+    @Test //추후수정 예정
     @DisplayName("훈련사 정보 삭제")
     void deleteTrainer() {
 
         // Given
-        given(trainerRepository.findByTrainerId(anyLong())).willReturn(trainer);
-        willDoNothing().given(trainerRepository).deleteById(anyLong());
-        willDoNothing().given(userRepository).deleteById(anyLong());
+        given(trainerRepository.findById(anyLong())).willReturn(Optional.of(trainer));
+        willDoNothing().given(trainerRepository).deleteTrainer(anyLong());
 
         // When
         trainerService.deleteTrainer(1L);

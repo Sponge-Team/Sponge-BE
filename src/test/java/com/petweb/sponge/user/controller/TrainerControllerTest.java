@@ -1,11 +1,9 @@
 package com.petweb.sponge.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petweb.sponge.user.dto.AddressDTO;
 import com.petweb.sponge.user.dto.HistoryDTO;
 import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.dto.TrainerId;
 import com.petweb.sponge.user.service.TrainerService;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,14 +34,14 @@ class TrainerControllerTest {
     private ObjectMapper objectMapper;
 
     private TrainerDTO trainerDTO;
-    private TrainerId trainerId;
 
     @BeforeEach
     public void setUp() {
         trainerDTO = TrainerDTO.builder()
-                .userId(1L)
+                .trainerId(1L)
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
+                .phone("010-0000-0000")
                 .profileImgUrl(null)
                 .content("자기소개")
                 .years(3)
@@ -67,7 +64,6 @@ class TrainerControllerTest {
                                 .build()
                 ))
                 .build();
-        trainerId = TrainerId.builder().trainerId(1L).userId(1L).build();
     }
     @Test
     @DisplayName("훈련사 정보 단건 조회")
@@ -86,14 +82,14 @@ class TrainerControllerTest {
     @DisplayName("훈련사 정보 저장")
     void signup() throws Exception {
         // Given
-        given(trainerService.saveTrainer(any(TrainerDTO.class))).willReturn(trainerId);
+        given(trainerService.saveTrainer(any(TrainerDTO.class))).willReturn(trainerDTO.getTrainerId());
 
         // When // Then
         mockMvc.perform(post("/api/trainer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(trainerDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(trainerId)));
+                .andExpect(content().json(objectMapper.writeValueAsString(trainerDTO.getTrainerId())));
     }
 
 //    @Test
@@ -119,7 +115,7 @@ class TrainerControllerTest {
 //                .andExpect(jsonPath("$.town").value(updateDto.getTown()));
 //    }
 //
-    @Test
+    @Test //추후수정 예정
     @DisplayName("훈련사 정보 삭제")
     void removeTrainer() throws Exception {
         // Given

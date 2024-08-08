@@ -24,12 +24,11 @@ public class InitMember1 {
     static class InitMemberService {
 
         private final TrainerRepository trainerRepository;
-        private final UserRepository userRepository;
 
         @Transactional
         public void init() {
-            User user = new User("test", "test", Gender.MALE.getCode(), null);
-            userRepository.save(user);
+            Trainer trainer = new Trainer("test");
+            trainerRepository.save(trainer);
         }
     }
 }

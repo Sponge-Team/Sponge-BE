@@ -21,27 +21,21 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    private String email;
-    private String name;
-    private int gender;
-    private String profileImgUrl;
+    private String email; //로그인 아이디
+    private String name; //이름
+    private int gender; //성별
+    private String phone; //핸드폰 번호
+    private String profileImgUrl; //프로필 이미지 링크
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
     private Timestamp modifiedAt;
 
     @Builder
-    public User(String email, String name, int gender, String profileImgUrl) {
-        this.email = email;
+    public User(String name, int gender, String phone, String profileImgUrl) {
         this.name = name;
         this.gender = gender;
+        this.phone = phone;
         this.profileImgUrl = profileImgUrl;
-    }
-
-    public User changeUserInfo(String name, int gender, String profileImgUrl) {
-        this.name = name;
-        this.gender = gender;
-        this.profileImgUrl = profileImgUrl;
-        return this;
     }
 }

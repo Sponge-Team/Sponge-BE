@@ -1,11 +1,9 @@
 package com.petweb.sponge.user.service;
 
 import com.petweb.sponge.user.domain.Trainer;
-import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.AddressDTO;
 import com.petweb.sponge.user.dto.HistoryDTO;
 import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.dto.TrainerId;
 import com.petweb.sponge.user.repository.TrainerRepository;
 import com.petweb.sponge.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +29,8 @@ public class TrainerService {
      */
     @Transactional(readOnly = true)
     public TrainerDTO findTrainer(Long trainerId) {
-        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
-        if (trainer == null) {
-            throw new RuntimeException("Trainer not found");
-        }
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                () -> new RuntimeException("NO Found Trainer"));
         return toDto(trainer);
     }
 
@@ -46,15 +42,14 @@ public class TrainerService {
      * @return
      */
     @Transactional
-    public TrainerId saveTrainer(TrainerDTO trainerDTO) {
-        User findUser = userRepository.findById(trainerDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("Not Found User"));
-        User user = findUser.changeUserInfo(trainerDTO.getName(), trainerDTO.getGender(), trainerDTO.getProfileImgUrl());
-        Trainer trainer = Trainer.createTrainer(trainerDTO, user);
+    public Long saveTrainer(TrainerDTO trainerDTO) {
+        //로그인하자마자 저장 되어있던 trainer 조회
+        Trainer trainer = trainerRepository.findById(trainerDTO.getTrainerId()).orElseThrow(
+                () -> new RuntimeException("NO Found Trainer"));
+        //trainer에 정보 셋팅 및 저장
+        trainer.settingTrainer(trainerDTO);
         Trainer savedTrainer = trainerRepository.save(trainer);
-        return TrainerId.builder()
-                .trainerId(savedTrainer.getId())
-                .userId(savedTrainer.getUser().getId()).build();
+        return savedTrainer.getId();
     }
 
 //    /**
@@ -82,7 +77,6 @@ public class TrainerService {
 //
 //    }
 //
-
     /**
      * 훈련사 정보 삭제
      *
@@ -90,12 +84,11 @@ public class TrainerService {
      */
     @Transactional
     public void deleteTrainer(Long trainerId) {
-        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
-        if (trainer == null) {
-            throw new RuntimeException("Trainer not found");
-        }
-        trainerRepository.deleteById(trainerId);
-        userRepository.deleteById(trainer.getUser().getId());
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                () -> new RuntimeException("NO Found Trainer"));
+
+        //벌크성 쿼리로 history, address 한번에 삭제
+        trainerRepository.deleteTrainer(trainer.getId());
     }
 
     /**
@@ -115,11 +108,11 @@ public class TrainerService {
                 .endDt(history.getEndDt())
                 .description(history.getDescription()).build()).collect(Collectors.toList());
         return TrainerDTO.builder()
-                .userId(trainer.getUser().getId())
                 .trainerId(trainer.getId())
-                .name(trainer.getUser().getName())
-                .gender(trainer.getUser().getGender())
-                .profileImgUrl(trainer.getUser().getProfileImgUrl())
+                .name(trainer.getName())
+                .gender(trainer.getGender())
+                .phone(trainer.getPhone())
+                .profileImgUrl(trainer.getProfileImgUrl())
                 .content(trainer.getContent())
                 .years(trainer.getYears())
                 .addressList(addressDTOList)
