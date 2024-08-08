@@ -1,13 +1,15 @@
 package com.petweb.sponge.user.repository;
 
-import com.petweb.sponge.user.domain.*;
+import com.petweb.sponge.user.domain.QAddress;
+import com.petweb.sponge.user.domain.QHistory;
+import com.petweb.sponge.user.domain.QTrainer;
+import com.petweb.sponge.user.domain.Trainer;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 import static com.petweb.sponge.user.domain.QAddress.*;
 import static com.petweb.sponge.user.domain.QHistory.*;
 import static com.petweb.sponge.user.domain.QTrainer.*;
-import static com.petweb.sponge.user.domain.QUser.*;
 
 public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
 
@@ -17,11 +19,18 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
     @Override
-    public Trainer findByTrainerId(Long trainerId) {
-        return queryFactory
-                .selectFrom(trainer)
-                .join(trainer.user,user).fetchJoin()
+    public void deleteTrainer(Long trainerId) {
+        queryFactory
+                .delete(history)
+                .where(history.trainer.id.eq(trainerId))
+                .execute();
+        queryFactory
+                .delete(address)
+                .where(address.trainer.id.eq(trainerId))
+                .execute();
+        queryFactory
+                .delete(trainer)
                 .where(trainer.id.eq(trainerId))
-                .fetchOne();
+                .execute();
     }
 }

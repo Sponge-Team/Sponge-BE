@@ -8,7 +8,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,30 +20,29 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "trainers")
+@EntityListeners(AuditingEntityListener.class)
 public class Trainer {
 
     @Id
     @GeneratedValue
     private Long id;
-    private String content;
-    private int years;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String email; //로그인 아이디
+    private String name; //이름
+    private int gender; //성별
+    private String phone; //핸드폰 번호
+    private String profileImgUrl; //프로필 이미지 링크
+    private String content; //자기소개
+    private int years; //연차
+    @CreatedDate
+    private Timestamp createdAt;
+    @LastModifiedDate
+    private Timestamp modifiedAt;
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<History> histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<>();
-
-    @Builder
-    public Trainer(String content, int years, User user) {
-        this.content = content;
-        this.years = years;
-        this.user = user;
-    }
 
     //==연관관계 메서드==//
     public void addHistory(History history) {
@@ -52,16 +55,19 @@ public class Trainer {
         address.setTrainer(this);
     }
 
+    public Trainer(String email) {
+        this.email = email;
+    }
+
     //==생성 메서드==//
-    public static Trainer createTrainer(TrainerDTO trainerDTO, User user) {
-        Trainer trainer = Trainer.builder()
-                .content(trainerDTO.getContent())
-                .years(trainerDTO.getYears())
-                .user(user)
-                .build();
-
+    public  Trainer settingTrainer(TrainerDTO trainerDTO) {
+        this.name = trainerDTO.getName();
+        this.gender = trainerDTO.getGender();
+        this.phone = trainerDTO.getPhone();
+        this.profileImgUrl = trainerDTO.getProfileImgUrl();
+        this.content = trainerDTO.getContent();
+        this.years = trainerDTO.getYears();
         List<HistoryDTO> historyList = trainerDTO.getHistoryList();
-
         //경력 정보 저장
         for (HistoryDTO historyDTO : historyList) {
             History history = History.builder()
@@ -69,7 +75,7 @@ public class Trainer {
                     .startDt(historyDTO.getStartDt())
                     .endDt(historyDTO.getEndDt())
                     .description(historyDTO.getDescription()).build();
-            trainer.addHistory(history);
+            this.addHistory(history);
         }
         //활동지역 정보 저장
         List<AddressDTO> addressList = trainerDTO.getAddressList();
@@ -78,9 +84,9 @@ public class Trainer {
                     .city(addressDTO.getCity())
                     .town(addressDTO.getTown())
                     .build();
-            trainer.addAddress(address);
+            this.addAddress(address);
         }
-        return trainer;
+        return this;
     }
 
 }

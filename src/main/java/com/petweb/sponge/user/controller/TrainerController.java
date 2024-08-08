@@ -1,8 +1,6 @@
 package com.petweb.sponge.user.controller;
 
-import com.petweb.sponge.user.domain.Trainer;
 import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.dto.TrainerId;
 import com.petweb.sponge.user.service.TrainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,8 +31,8 @@ public class TrainerController {
      * @return
      */
     @PostMapping()
-    public ResponseEntity<TrainerId> signup(@RequestBody TrainerDTO trainerDTO) {
-        TrainerId trainerId = trainerService.saveTrainer(trainerDTO);
+    public ResponseEntity<Long> signup(@RequestBody TrainerDTO trainerDTO) {
+        Long trainerId = trainerService.saveTrainer(trainerDTO);
         return new ResponseEntity<>(trainerId, HttpStatus.OK);
     }
 

@@ -4,6 +4,5 @@ import com.petweb.sponge.user.domain.Trainer;
 
 public interface TrainerRepositoryCustom {
 
-
-    Trainer findByTrainerId(Long trainerId);
+    void deleteTrainer(Long trainerId);
 }
