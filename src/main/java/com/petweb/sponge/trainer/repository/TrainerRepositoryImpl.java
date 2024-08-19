@@ -1,15 +1,11 @@
-package com.petweb.sponge.user.repository;
+package com.petweb.sponge.trainer.repository;
 
-import com.petweb.sponge.user.domain.QAddress;
-import com.petweb.sponge.user.domain.QHistory;
-import com.petweb.sponge.user.domain.QTrainer;
-import com.petweb.sponge.user.domain.Trainer;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-import static com.petweb.sponge.user.domain.QAddress.*;
-import static com.petweb.sponge.user.domain.QHistory.*;
-import static com.petweb.sponge.user.domain.QTrainer.*;
+import static com.petweb.sponge.trainer.domain.QAddress.*;
+import static com.petweb.sponge.trainer.domain.QHistory.*;
+import static com.petweb.sponge.trainer.domain.QTrainer.*;
 
 public class TrainerRepositoryImpl implements TrainerRepositoryCustom{
 

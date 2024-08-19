@@ -1,11 +1,10 @@
-package com.petweb.sponge.user.service;
+package com.petweb.sponge.trainer.service;
 
-import com.petweb.sponge.user.domain.Trainer;
-import com.petweb.sponge.user.dto.AddressDTO;
-import com.petweb.sponge.user.dto.HistoryDTO;
-import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.repository.TrainerRepository;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.trainer.domain.Trainer;
+import com.petweb.sponge.trainer.dto.AddressDTO;
+import com.petweb.sponge.trainer.dto.HistoryDTO;
+import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.repository.TrainerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;
-    private final UserRepository userRepository;
 
 
     /**

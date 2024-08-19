@@ -1,10 +1,7 @@
 package com.petweb.sponge.controller;
 
-import com.petweb.sponge.user.domain.Trainer;
-import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.repository.TrainerRepository;
-import com.petweb.sponge.user.repository.UserRepository;
-import com.petweb.sponge.utils.Gender;
+import com.petweb.sponge.trainer.domain.Trainer;
+import com.petweb.sponge.trainer.repository.TrainerRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class InitMember1 {
+public class Init {
     private final InitMemberService initMemberService;
 
     @PostConstruct
@@ -27,7 +24,9 @@ public class InitMember1 {
 
         @Transactional
         public void init() {
-            Trainer trainer = new Trainer("test");
+            Trainer trainer = Trainer.builder()
+                    .email("test")
+                    .build();
             trainerRepository.save(trainer);
         }
     }

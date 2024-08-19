@@ -1,9 +1,10 @@
 package com.petweb.sponge.user.repository;
 
-import com.petweb.sponge.user.domain.Trainer;
-import com.petweb.sponge.user.dto.AddressDTO;
-import com.petweb.sponge.user.dto.HistoryDTO;
-import com.petweb.sponge.user.dto.TrainerDTO;
+import com.petweb.sponge.trainer.domain.Trainer;
+import com.petweb.sponge.trainer.dto.AddressDTO;
+import com.petweb.sponge.trainer.dto.HistoryDTO;
+import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ import java.util.Collections;
 class TrainerRepositoryTest {
 
     @Autowired
-    TrainerRepository trainerRepository;
+    private TrainerRepository trainerRepository;
 
     private Trainer trainer;
     private Trainer findTrainer;

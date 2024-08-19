@@ -1,7 +1,7 @@
-package com.petweb.sponge.user.controller;
+package com.petweb.sponge.trainer.controller;
 
-import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.service.TrainerService;
+import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.service.TrainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
