@@ -1,4 +1,4 @@
-package com.petweb.sponge.user.dto;
+package com.petweb.sponge.trainer.dto;
 
 import lombok.Builder;
 import lombok.Getter;

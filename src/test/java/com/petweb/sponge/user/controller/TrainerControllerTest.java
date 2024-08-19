@@ -1,14 +1,17 @@
 package com.petweb.sponge.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petweb.sponge.user.dto.AddressDTO;
-import com.petweb.sponge.user.dto.HistoryDTO;
-import com.petweb.sponge.user.dto.TrainerDTO;
-import com.petweb.sponge.user.service.TrainerService;
+import com.petweb.sponge.trainer.controller.TrainerController;
+import com.petweb.sponge.trainer.dto.AddressDTO;
+import com.petweb.sponge.trainer.dto.HistoryDTO;
+import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.service.TrainerService;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

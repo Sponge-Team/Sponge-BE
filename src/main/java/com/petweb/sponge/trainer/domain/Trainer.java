@@ -1,8 +1,8 @@
-package com.petweb.sponge.user.domain;
+package com.petweb.sponge.trainer.domain;
 
-import com.petweb.sponge.user.dto.AddressDTO;
-import com.petweb.sponge.user.dto.HistoryDTO;
-import com.petweb.sponge.user.dto.TrainerDTO;
+import com.petweb.sponge.trainer.dto.AddressDTO;
+import com.petweb.sponge.trainer.dto.HistoryDTO;
+import com.petweb.sponge.trainer.dto.TrainerDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -55,6 +55,7 @@ public class Trainer {
         address.setTrainer(this);
     }
 
+    @Builder
     public Trainer(String email) {
         this.email = email;
     }

@@ -1,5 +1,8 @@
 package com.petweb.sponge.utils;
 
+import lombok.Getter;
+
+@Getter
 public enum Gender {
 
     MALE(1, "남자"),
@@ -16,14 +19,6 @@ public enum Gender {
     Gender(int code, String description) {
         this.code = code;
         this.description = description;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
 }
