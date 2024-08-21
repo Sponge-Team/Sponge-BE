@@ -36,13 +36,13 @@ class TrainerServiceTest {
     private Trainer findTrainer;
     private TrainerDTO trainerDTO;
     private Trainer trainer;
+    private Long loginId=1L;
 
     @BeforeEach
     void setUp() {
-        findTrainer = new Trainer("test");
+        findTrainer = new Trainer("test","test");
         ReflectionTestUtils.setField(findTrainer, "id", 1L);
         trainerDTO = TrainerDTO.builder()
-                .trainerId(1L)
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")
@@ -83,7 +83,7 @@ class TrainerServiceTest {
 
         // Then
         assertThat(findTrainer).isNotNull();
-        assertThat(findTrainer.getTrainerId()).isEqualTo(trainer.getId());
+        assertThat(loginId).isEqualTo(trainer.getId());
     }
 
     @Test
@@ -94,21 +94,21 @@ class TrainerServiceTest {
         given(trainerRepository.save(any(Trainer.class))).willReturn(trainer);
 
         // When
-        trainerService.saveTrainer(trainerDTO);
+        trainerService.saveTrainer(loginId, trainerDTO);
 
         // Then
-        assertEquals(trainerDTO.getTrainerId(), trainer.getId());
+        assertEquals(loginId, trainer.getId());
     }
 
     @Test
     @DisplayName("훈련사 찾기 실패")
     public void saveTrainerNotFound() {
         // Given
-        given(trainerRepository.findById(trainerDTO.getTrainerId())).willReturn(Optional.empty());
+        given(trainerRepository.findById(loginId)).willReturn(Optional.empty());
 
         // When & Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            trainerService.saveTrainer(trainerDTO);
+            trainerService.saveTrainer(loginId, trainerDTO);
         });
 
         assertEquals("NO Found Trainer", exception.getMessage());

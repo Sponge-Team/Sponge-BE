@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google OAuth2 Login Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .login-container {
+      text-align: center;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .login-container h1 {
+      margin-bottom: 20px;
+    }
+    .login-button {
+      background-color: #4285F4;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .login-button:hover {
+      background-color: #357ae8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h1>Login with Google</h1>
+  <button id="loginButton" class="login-button">Sign in with Google</button>
+</div>
+
+<script>
+  document.getElementById('loginButton').addEventListener('click', function() {
+    // Set cookie
+    document.cookie = "loginType=trainer; path=/; max-age=3600"; // expires in 1 hour
+
+    // Redirect to OAuth2 login
+    window.location.href = '/oauth2/authorization/google';
+  });
+</script>
+</body>
+</html>
