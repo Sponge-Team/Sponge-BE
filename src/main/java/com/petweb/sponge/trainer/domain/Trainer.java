@@ -54,11 +54,14 @@ public class Trainer {
         addresses.add(address);
         address.setTrainer(this);
     }
-
     @Builder
-    public Trainer(String email) {
+    public Trainer(String email, String name) {
         this.email = email;
+        this.name = name;
     }
+
+
+
 
     //==생성 메서드==//
     public  Trainer settingTrainer(TrainerDTO trainerDTO) {

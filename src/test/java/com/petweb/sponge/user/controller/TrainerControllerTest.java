@@ -6,22 +6,23 @@ import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
 import com.petweb.sponge.trainer.dto.TrainerDTO;
 import com.petweb.sponge.trainer.service.TrainerService;
+import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,6 +34,9 @@ class TrainerControllerTest {
     @MockBean
     private TrainerService trainerService;
 
+    @MockBean
+    private AuthorizationUtil authorizationUtil;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -41,7 +45,6 @@ class TrainerControllerTest {
     @BeforeEach
     public void setUp() {
         trainerDTO = TrainerDTO.builder()
-                .trainerId(1L)
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")
@@ -70,6 +73,7 @@ class TrainerControllerTest {
     }
     @Test
     @DisplayName("훈련사 정보 단건 조회")
+    @WithMockUser
     void getTrainer() throws Exception {
         // Given
         given(trainerService.findTrainer(anyLong())).willReturn(trainerDTO);
@@ -83,16 +87,18 @@ class TrainerControllerTest {
 
     @Test
     @DisplayName("훈련사 정보 저장")
+    @WithMockUser
     void signup() throws Exception {
         // Given
-        given(trainerService.saveTrainer(any(TrainerDTO.class))).willReturn(trainerDTO.getTrainerId());
+        given(authorizationUtil.getLoginId()).willReturn(1L);
+        given(trainerService.saveTrainer(anyLong(), any(TrainerDTO.class))).willReturn(trainerDTO);
 
         // When // Then
-        mockMvc.perform(post("/api/trainer")
+        mockMvc.perform(post("/api/trainer").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(trainerDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(trainerDTO.getTrainerId())));
+                .andExpect(content().json(objectMapper.writeValueAsString(trainerDTO)));
     }
 
 //    @Test
@@ -120,12 +126,14 @@ class TrainerControllerTest {
 //
     @Test //추후수정 예정
     @DisplayName("훈련사 정보 삭제")
+    @WithMockUser
     void removeTrainer() throws Exception {
         // Given
         willDoNothing().given(trainerService).deleteTrainer(anyLong());
 
         // When  // Then
         mockMvc.perform(delete("/api/trainer/{trainerId}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

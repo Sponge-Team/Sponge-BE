@@ -36,18 +36,20 @@ public class TrainerService {
     /**
      * 훈련사 정보저장
      *
+     * @param loginId
      * @param trainerDTO
      * @return
      */
     @Transactional
-    public Long saveTrainer(TrainerDTO trainerDTO) {
+    public TrainerDTO saveTrainer(Long loginId, TrainerDTO trainerDTO) {
         //로그인하자마자 저장 되어있던 trainer 조회
-        Trainer trainer = trainerRepository.findById(trainerDTO.getTrainerId()).orElseThrow(
+        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
                 () -> new RuntimeException("NO Found Trainer"));
         //trainer에 정보 셋팅 및 저장
         trainer.settingTrainer(trainerDTO);
         Trainer savedTrainer = trainerRepository.save(trainer);
-        return savedTrainer.getId();
+        return toDto(savedTrainer);
+
     }
 
 //    /**
@@ -106,7 +108,6 @@ public class TrainerService {
                 .endDt(history.getEndDt())
                 .description(history.getDescription()).build()).collect(Collectors.toList());
         return TrainerDTO.builder()
-                .trainerId(trainer.getId())
                 .name(trainer.getName())
                 .gender(trainer.getGender())
                 .phone(trainer.getPhone())

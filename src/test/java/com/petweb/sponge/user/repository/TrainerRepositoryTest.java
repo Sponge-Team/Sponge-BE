@@ -28,10 +28,9 @@ class TrainerRepositoryTest {
 
     @BeforeEach
     void setup() {
-        findTrainer = new Trainer("test");
+        findTrainer = new Trainer("test","test");
         ReflectionTestUtils.setField(findTrainer, "id", 1L);
         trainerDTO = TrainerDTO.builder()
-                .trainerId(1L)
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")

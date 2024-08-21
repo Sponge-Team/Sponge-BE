@@ -2,6 +2,9 @@ package com.petweb.sponge.trainer.controller;
 
 import com.petweb.sponge.trainer.dto.TrainerDTO;
 import com.petweb.sponge.trainer.service.TrainerService;
+import com.petweb.sponge.utils.AuthorizationUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class TrainerController {
 
     private final TrainerService trainerService;
+    private final AuthorizationUtil authorizationUtil;
 
     /**
      * 훈련사 단건조회
@@ -31,9 +35,9 @@ public class TrainerController {
      * @return
      */
     @PostMapping()
-    public ResponseEntity<Long> signup(@RequestBody TrainerDTO trainerDTO) {
-        Long trainerId = trainerService.saveTrainer(trainerDTO);
-        return new ResponseEntity<>(trainerId, HttpStatus.OK);
+    public ResponseEntity<TrainerDTO> signup(@RequestBody TrainerDTO trainerDTO) {
+        TrainerDTO trainer = trainerService.saveTrainer(authorizationUtil.getLoginId(),trainerDTO);
+        return new ResponseEntity<>(trainer, HttpStatus.OK);
     }
 
 //    /**
@@ -54,7 +58,14 @@ public class TrainerController {
      * @param trainerId
      */
     @DeleteMapping("/{trainerId}")
-    public void removeTrainer(@PathVariable("trainerId") Long trainerId) {
+    public void removeTrainer(@PathVariable("trainerId") Long trainerId, HttpServletResponse response) {
         trainerService.deleteTrainer(trainerId);
+
+        //로그인 쿠키 삭제
+        Cookie cookie = new Cookie("Authorization", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        response.setStatus(200);
     }
 }
