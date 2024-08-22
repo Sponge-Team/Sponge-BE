@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/img")
-public class PostImgController {
+public class ProblemPostImgController {
 
     private final S3UploadService s3UploadService;
 
