@@ -54,7 +54,7 @@ public class TrainerController {
 //    }
 //
     /**
-     * 훈련사 정보 삭제
+     * 회원탈퇴
      * @param trainerId
      */
     @DeleteMapping("/{trainerId}")

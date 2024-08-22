@@ -23,6 +23,7 @@ public class UserService {
      * @param userId
      * @return
      */
+    @Transactional(readOnly = true)
     public UserDTO findUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("NO Found USER"));
@@ -62,5 +63,14 @@ public class UserService {
                 .build();
     }
 
-
+    /**
+     * 유저 정보 삭제
+     * @param userId
+     */
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("NO Found USER"));
+        userRepository.deleteUser(user.getId());
+    }
 }

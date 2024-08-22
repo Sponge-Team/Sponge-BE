@@ -43,13 +43,22 @@
 
 <div class="login-container">
   <h1>Login with Google</h1>
-  <button id="loginButton" class="login-button">Sign in with Google</button>
+  <button id="trainer" class="login-button">trainer in with Google</button>
+  <button id="user" class="login-button">user in with Google</button>
 </div>
 
 <script>
-  document.getElementById('loginButton').addEventListener('click', function() {
+  document.getElementById('trainer').addEventListener('click', function() {
     // Set cookie
     document.cookie = "loginType=trainer; path=/; max-age=3600"; // expires in 1 hour
+
+    // Redirect to OAuth2 login
+    window.location.href = '/oauth2/authorization/google';
+  });
+
+  document.getElementById('user').addEventListener('click', function() {
+    // Set cookie
+    document.cookie = "loginType=user; path=/; max-age=3600"; // expires in 1 hour
 
     // Redirect to OAuth2 login
     window.location.href = '/oauth2/authorization/google';
