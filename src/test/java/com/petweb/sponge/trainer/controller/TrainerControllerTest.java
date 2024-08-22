@@ -1,7 +1,6 @@
-package com.petweb.sponge.user.controller;
+package com.petweb.sponge.trainer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petweb.sponge.trainer.controller.TrainerController;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
 import com.petweb.sponge.trainer.dto.TrainerDTO;
