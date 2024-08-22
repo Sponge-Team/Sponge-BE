@@ -1,11 +1,10 @@
-package com.petweb.sponge.user.service;
+package com.petweb.sponge.trainer.service;
 
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
 import com.petweb.sponge.trainer.dto.TrainerDTO;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.trainer.service.TrainerService;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

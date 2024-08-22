@@ -1,4 +1,4 @@
-package com.petweb.sponge.trainer.domain;
+package com.petweb.sponge.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,26 +9,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "address")
-public class Address {
+@Table(name = "user_address")
+public class UserAddress {
 
     @Id
     @GeneratedValue
     private Long id;
     private int city;
     private int town;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainer_id")
-    private Trainer trainer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
-    public Address(int city, int town) {
+    public UserAddress(int city, int town, User user) {
         this.city = city;
         this.town = town;
-    }
-
-    public void setTrainer(Trainer trainer) {
-        this.trainer = trainer;
+        this.user = user;
     }
 }

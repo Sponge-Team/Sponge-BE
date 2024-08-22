@@ -38,14 +38,13 @@ public class History {
     private Trainer trainer;
 
     @Builder
-    public History(String title, String startDt, String endDt, String description) {
+    public History(String title, String startDt, String endDt, String description, Trainer trainer) {
         this.title = title;
         this.startDt = startDt;
         this.endDt = endDt;
         this.description = description;
-    }
-
-    public void setTrainer(Trainer trainer) {
         this.trainer = trainer;
     }
+
+
 }

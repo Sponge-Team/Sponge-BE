@@ -4,7 +4,6 @@ import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.PostCategory;
 import com.petweb.sponge.post.domain.ProblemPost;
-import com.petweb.sponge.post.domain.ProblemType;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.repository.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service

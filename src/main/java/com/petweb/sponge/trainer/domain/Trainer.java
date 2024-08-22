@@ -42,29 +42,16 @@ public class Trainer {
     private List<History> histories = new ArrayList<>();
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
-    private List<Address> addresses = new ArrayList<>();
+    private List<TrainerAddress> trainerAddresses = new ArrayList<>();
 
-    //==연관관계 메서드==//
-    public void addHistory(History history) {
-        histories.add(history);
-        history.setTrainer(this);
-    }
-
-    public void addAddress(Address address) {
-        addresses.add(address);
-        address.setTrainer(this);
-    }
     @Builder
     public Trainer(String email, String name) {
         this.email = email;
         this.name = name;
     }
 
-
-
-
     //==생성 메서드==//
-    public  Trainer settingTrainer(TrainerDTO trainerDTO) {
+    public Trainer settingTrainer(TrainerDTO trainerDTO) {
         this.name = trainerDTO.getName();
         this.gender = trainerDTO.getGender();
         this.phone = trainerDTO.getPhone();
@@ -78,17 +65,20 @@ public class Trainer {
                     .title(historyDTO.getTitle())
                     .startDt(historyDTO.getStartDt())
                     .endDt(historyDTO.getEndDt())
-                    .description(historyDTO.getDescription()).build();
-            this.addHistory(history);
+                    .description(historyDTO.getDescription())
+                    .trainer(this)
+                    .build();
+            getHistories().add(history);
         }
         //활동지역 정보 저장
         List<AddressDTO> addressList = trainerDTO.getAddressList();
         for (AddressDTO addressDTO : addressList) {
-            Address address = Address.builder()
+            TrainerAddress trainerAddress = TrainerAddress.builder()
                     .city(addressDTO.getCity())
                     .town(addressDTO.getTown())
+                    .trainer(this)
                     .build();
-            this.addAddress(address);
+            getTrainerAddresses().add(trainerAddress);
         }
         return this;
     }

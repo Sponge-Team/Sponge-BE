@@ -98,7 +98,7 @@ public class TrainerService {
      * @return
      */
     private TrainerDTO toDto(Trainer trainer) {
-        List<AddressDTO> addressDTOList = trainer.getAddresses().stream().map(address -> AddressDTO.builder()
+        List<AddressDTO> addressDTOList = trainer.getTrainerAddresses().stream().map(address -> AddressDTO.builder()
                 .city(address.getCity())
                 .town(address.getTown())
                 .build()).collect(Collectors.toList());
