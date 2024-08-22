@@ -49,6 +49,17 @@ public class UserService {
         return toDto(savedUser);
     }
 
+    /**
+     * 유저 정보 삭제
+     * @param userId
+     */
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("NO Found USER"));
+        userRepository.deleteUser(user.getId());
+    }
+
     private UserDTO toDto(User user) {
         List<AddressDTO> addressDTOList = user.getUserAddresses().stream().map(userAddress -> AddressDTO.builder()
                 .city(userAddress.getCity())
@@ -63,14 +74,5 @@ public class UserService {
                 .build();
     }
 
-    /**
-     * 유저 정보 삭제
-     * @param userId
-     */
-    @Transactional
-    public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("NO Found USER"));
-        userRepository.deleteUser(user.getId());
-    }
+
 }
