@@ -3,6 +3,7 @@ package com.petweb.sponge.pet.domain;
 import com.petweb.sponge.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,8 +28,6 @@ public class Pet {
     private int gender; // 성별
     private int age; // 나이
     private float weight; // 몸무게
-    private int city; // 광역시, 도
-    private int town; // 구, 시
 
     @CreatedDate
     private Timestamp createdAt;
@@ -39,5 +38,13 @@ public class Pet {
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    @Builder
+    public Pet(String name, String breed, int gender, int age, float weight, User user) {
+        this.name = name;
+        this.breed = breed;
+        this.gender = gender;
+        this.age = age;
+        this.weight = weight;
+        this.user = user;
+    }
 }

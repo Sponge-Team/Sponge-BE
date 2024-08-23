@@ -45,10 +45,9 @@ public class UserController {
      * 회원탈퇴
      * @param userId
      * @param response
-     * @throws IOException
      */
     @DeleteMapping("/{userId}")
-    public void removeUser(@PathVariable("userId") Long userId, HttpServletResponse response) throws IOException {
+    public void removeUser(@PathVariable("userId") Long userId, HttpServletResponse response)  {
         userService.deleteUser(userId);
 
         Cookie cookie = new Cookie("Authorization", null);
