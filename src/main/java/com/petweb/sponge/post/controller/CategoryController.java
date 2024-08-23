@@ -25,8 +25,8 @@ public class CategoryController {
      */
     @GetMapping("/problem_type")
     public ResponseEntity<List<ProblemType>> getProblemType() {
-        List<ProblemType> problemType = categoryService.findAllProblemType();
-        return new ResponseEntity<>(problemType,HttpStatus.OK);
+        List<ProblemType> problemTypeList = categoryService.findAllProblemType();
+        return new ResponseEntity<>(problemTypeList,HttpStatus.OK);
     }
 
 

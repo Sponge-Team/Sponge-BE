@@ -5,6 +5,7 @@ import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.Gender;
+import io.jsonwebtoken.security.Jwks;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,6 +64,19 @@ class UserServiceTest {
         user = findUser.settingUser(userDTO);
     }
 
+    @Test
+    @DisplayName("유저 정보 단건조회")
+    void findUser() {
+        // Given
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+
+        // When
+        UserDTO findUser = userService.findUser(1L);
+
+        // Then
+        assertThat(findUser).isNotNull();
+        assertThat(loginId).isEqualTo(user.getId());
+    }
     @Test
     @DisplayName("유저 정보 저장")
     void saveUser() {
