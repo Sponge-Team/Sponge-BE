@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.PostCategory;
@@ -36,10 +37,10 @@ public class ProblemPostService {
     public void savePost(Long loginId, ProblemPostDTO problemPostDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
-                () -> new RuntimeException("NO Found USER"));
+                () -> new NotFoundException("NO Found USER"));
         //선택한 반려동물 정보 가져오기
         Pet pet = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
-                () -> new RuntimeException("NO Found Pet"));
+                () -> new NotFoundException("NO Found Pet"));
 
         ProblemPost problemPost = toEntity(problemPostDTO,user,pet);
 

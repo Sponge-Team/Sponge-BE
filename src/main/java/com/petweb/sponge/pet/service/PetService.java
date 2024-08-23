@@ -1,5 +1,6 @@
 package com.petweb.sponge.pet.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.pet.repository.PetRepository;
@@ -22,7 +23,7 @@ public class PetService {
      */
     public PetDTO findPet(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(
-                () -> new RuntimeException("NO Found Pet"));
+                () -> new NotFoundException("NO Found Pet"));
 
         return toDto(pet);
     }
@@ -36,7 +37,7 @@ public class PetService {
     public PetDTO savePet(Long loginId, PetDTO petDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
-                () -> new RuntimeException("NO Found USER"));
+                () -> new NotFoundException("NO Found USER"));
         Pet pet = Pet.builder()
                 .name(petDTO.getName())
                 .breed(petDTO.getBreed())

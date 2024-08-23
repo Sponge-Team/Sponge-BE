@@ -2,6 +2,7 @@ package com.petweb.sponge.user.repository;
 
 import com.petweb.sponge.user.domain.QUser;
 import com.petweb.sponge.user.domain.QUserAddress;
+import com.petweb.sponge.user.domain.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -15,6 +16,16 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
 
     public UserRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public User findUserWithAddress(Long userId) {
+        return queryFactory
+                .selectDistinct(user)
+                .from(user)
+                .leftJoin(user.userAddresses, userAddress).fetchJoin()
+                .where(user.id.eq(userId))
+                .fetchOne();
     }
 
     @Override

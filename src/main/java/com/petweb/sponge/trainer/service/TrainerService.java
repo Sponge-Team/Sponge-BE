@@ -1,5 +1,6 @@
 package com.petweb.sponge.trainer.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
@@ -20,15 +21,15 @@ public class TrainerService {
 
 
     /**
-     * 훈련사 조회
+     * 훈련사 단건 조회
      *
      * @param trainerId
      * @return
      */
     @Transactional(readOnly = true)
     public TrainerDTO findTrainer(Long trainerId) {
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
-                () -> new RuntimeException("NO Found Trainer"));
+        // trainer, address 한번에 조회
+        Trainer trainer = trainerRepository.findTrainerWithAddress(trainerId);
         return toDto(trainer);
     }
 
@@ -44,7 +45,7 @@ public class TrainerService {
     public TrainerDTO saveTrainer(Long loginId, TrainerDTO trainerDTO) {
         //로그인하자마자 저장 되어있던 trainer 조회
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-                () -> new RuntimeException("NO Found Trainer"));
+                () -> new NotFoundException("NO Found Trainer"));
         //trainer에 정보 셋팅 및 저장
         trainer.settingTrainer(trainerDTO);
         Trainer savedTrainer = trainerRepository.save(trainer);
@@ -85,7 +86,7 @@ public class TrainerService {
     @Transactional
     public void deleteTrainer(Long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
-                () -> new RuntimeException("NO Found Trainer"));
+                () -> new NotFoundException("NO Found Trainer"));
 
         //벌크성 쿼리로 history, address 한번에 삭제
         trainerRepository.deleteTrainer(trainer.getId());

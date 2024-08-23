@@ -28,6 +28,7 @@ public class ProblemPost {
     private String title; // 글제목
     private String content; // 글내용
     private String duration; // 문제행동 지속기간
+    private int likeCount; // 추천수
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
@@ -45,10 +46,11 @@ public class ProblemPost {
     private Pet pet;
 
     @Builder
-    public ProblemPost(String title, String content, String duration, User user, Pet pet) {
+    public ProblemPost(String title, String content, String duration, int likeCount,User user, Pet pet) {
         this.title = title;
         this.content = content;
         this.duration = duration;
+        this.likeCount = likeCount;
         this.user = user;
         this.pet = pet;
     }

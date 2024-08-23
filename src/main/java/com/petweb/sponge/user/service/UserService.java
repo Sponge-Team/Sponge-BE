@@ -1,5 +1,6 @@
 package com.petweb.sponge.user.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.domain.UserAddress;
@@ -20,14 +21,15 @@ public class UserService {
 
     /**
      * 유저 단건 조회
+     *
      * @param userId
      * @return
      */
     @Transactional(readOnly = true)
     public UserDTO findUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("NO Found USER"));
-            return toDto(user);
+        // user,address 한번에 조회
+        User user = userRepository.findUserWithAddress(userId);
+        return toDto(user);
     }
 
     /**
@@ -41,7 +43,7 @@ public class UserService {
     public UserDTO saveUser(Long loginId, UserDTO userDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
-                () -> new RuntimeException("NO Found USER"));
+                () -> new NotFoundException("NO Found USER"));
 
         user.settingUser(userDTO);
 
@@ -51,12 +53,13 @@ public class UserService {
 
     /**
      * 유저 정보 삭제
+     *
      * @param userId
      */
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("NO Found USER"));
+                () -> new NotFoundException("NO Found USER"));
         userRepository.deleteUser(user.getId());
     }
 
