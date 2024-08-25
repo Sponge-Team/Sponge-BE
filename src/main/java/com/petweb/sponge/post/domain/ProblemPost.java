@@ -34,8 +34,7 @@ public class ProblemPost {
     @LastModifiedDate
     private Timestamp modifiedAt;
 
-    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
-    private List<PostCategory> postCategories = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -44,6 +43,16 @@ public class ProblemPost {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
     private Pet pet;
+
+    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
+    private List<PostCategory> postCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
+    private List<Tag> tags= new ArrayList<>();
+
+    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
+    private List<PostImage> postImages= new ArrayList<>();
+
 
     @Builder
     public ProblemPost(String title, String content, String duration, int likeCount,User user, Pet pet) {

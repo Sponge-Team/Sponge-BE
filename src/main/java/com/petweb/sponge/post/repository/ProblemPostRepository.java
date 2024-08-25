@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProblemPostRepository extends JpaRepository<ProblemPost,Long> {
+public interface ProblemPostRepository extends JpaRepository<ProblemPost,Long>,ProblemPostRepositoryCustom {
 
 
 

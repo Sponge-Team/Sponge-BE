@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class TrainerDTO {
 
+    private Long trainerId; //훈련사 아이디
     private String name; //이름
     private int gender; //성별
     private String phone; //핸드폰 번호

@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PetService {
@@ -17,15 +20,29 @@ public class PetService {
     private final UserRepository userRepository;
 
     /**
-     * 펫 정보 조회
+     * 펫 정보 단건 조회
      * @param petId
      * @return
      */
+    @Transactional(readOnly = true)
     public PetDTO findPet(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(
                 () -> new NotFoundException("NO Found Pet"));
 
         return toDto(pet);
+    }
+
+    /**
+     * 펫 userId 해당 건 전체 조회
+     *
+     * @param userId
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<PetDTO> findAllPet(Long userId) {
+        List<Pet> petList = petRepository.findAllByUserId(userId);
+        return petList.stream().map(pet -> toDto(pet)).collect(Collectors.toList());
+
     }
     /**
      * 펫 정보 저장
@@ -52,15 +69,17 @@ public class PetService {
     }
 
     /**
-     * 펫 정보 삭제
+     * 펫 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
      * @param petId
      */
+    @Transactional
     public void deletePet(Long petId) {
         petRepository.deleteById(petId);
     }
 
     private PetDTO toDto(Pet pet) {
         return PetDTO.builder()
+                .petId(pet.getId())
                 .name(pet.getName())
                 .breed(pet.getBreed())
                 .gender(pet.getGender())

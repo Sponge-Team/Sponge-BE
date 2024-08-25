@@ -52,7 +52,7 @@ public class UserService {
     }
 
     /**
-     * 유저 정보 삭제
+     * 유저 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
      *
      * @param userId
      */
@@ -69,6 +69,7 @@ public class UserService {
                 .town(userAddress.getTown())
                 .build()).collect(Collectors.toList());
         return UserDTO.builder()
+                .userId(user.getId())
                 .name(user.getName())
                 .gender(user.getGender())
                 .phone(user.getPhone())

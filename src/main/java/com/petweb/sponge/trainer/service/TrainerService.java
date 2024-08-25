@@ -79,7 +79,7 @@ public class TrainerService {
 //    }
 //
     /**
-     * 훈련사 정보 삭제
+     * 훈련사 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
      *
      * @param trainerId
      */
@@ -109,6 +109,7 @@ public class TrainerService {
                 .endDt(history.getEndDt())
                 .description(history.getDescription()).build()).collect(Collectors.toList());
         return TrainerDTO.builder()
+                .trainerId(trainer.getId())
                 .name(trainer.getName())
                 .gender(trainer.getGender())
                 .phone(trainer.getPhone())

@@ -105,7 +105,7 @@ class TrainerServiceTest {
         // Given
         given(trainerRepository.findById(loginId)).willReturn(Optional.empty());
 
-        // When & Then
+        // When // Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             trainerService.saveTrainer(loginId, trainerDTO);
         });

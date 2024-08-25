@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class UserDTO {
 
+    private Long userId;
     private String name;
     private int gender;
     private String phone;
