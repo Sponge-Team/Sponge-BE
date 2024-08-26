@@ -28,27 +28,38 @@ public class ProblemPost {
     private String title; // 글제목
     private String content; // 글내용
     private String duration; // 문제행동 지속기간
+    private int likeCount; // 추천수
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
     private Timestamp modifiedAt;
 
-    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
-    private List<PostCategory> postCategories = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id")
+    @JoinColumn(name = "pet_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Pet pet;
 
+    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
+    private List<PostCategory> postCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
+    private List<Tag> tags= new ArrayList<>();
+
+    @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
+    private List<PostImage> postImages= new ArrayList<>();
+
+
     @Builder
-    public ProblemPost(String title, String content, String duration, User user, Pet pet) {
+    public ProblemPost(String title, String content, String duration, int likeCount,User user, Pet pet) {
         this.title = title;
         this.content = content;
         this.duration = duration;
+        this.likeCount = likeCount;
         this.user = user;
         this.pet = pet;
     }

@@ -1,13 +1,13 @@
 package com.petweb.sponge.post.controller;
 
+import com.petweb.sponge.post.dto.PostDetailDto;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.service.ProblemPostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,12 +19,33 @@ public class ProblemPostController {
     private final AuthorizationUtil authorizationUtil;
 
     /**
+     * 글 단건 조회
+     *
+     * @param problemPostId
+     * @return
+     */
+    @GetMapping("/{problemPostId}")
+    public ResponseEntity<PostDetailDto> getPost(@PathVariable("problemPostId")Long problemPostId) {
+        PostDetailDto problemPost = problemPostService.findPost(problemPostId);
+        return new ResponseEntity<>(problemPost, HttpStatus.OK);
+    }
+    /**
      * 글 작성 저장
      * @param problemPostDTO
      */
     @PostMapping()
     public void writePost(@RequestBody ProblemPostDTO problemPostDTO) {
             problemPostService.savePost(authorizationUtil.getLoginId(),problemPostDTO);
+    }
+
+    /**
+     * 글 삭제
+     *
+     * @param problemPostId
+     */
+    @DeleteMapping("/{problemPostId}")
+    public void removePost(@PathVariable("problemPostId")Long problemPostId) {
+        problemPostService.deletePost(problemPostId);
     }
 
 }

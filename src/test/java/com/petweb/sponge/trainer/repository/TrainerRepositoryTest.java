@@ -1,35 +1,41 @@
 package com.petweb.sponge.trainer.repository;
 
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.petweb.sponge.TestConfig;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
 import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.utils.Gender;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
+@Import(TestConfig.class)
 class TrainerRepositoryTest {
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private TrainerRepository trainerRepository;
 
-    private Trainer trainer;
-    private Trainer findTrainer;
-    private TrainerDTO trainerDTO;
 
     @BeforeEach
     void setup() {
-        findTrainer = new Trainer("test","test");
-        ReflectionTestUtils.setField(findTrainer, "id", 1L);
-        trainerDTO = TrainerDTO.builder()
+        Trainer trainer = new Trainer("test", "test");
+        TrainerDTO trainerDTO = TrainerDTO.builder()
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")
@@ -55,17 +61,25 @@ class TrainerRepositoryTest {
                                 .build()
                 ))
                 .build();
-        trainer = findTrainer.settingTrainer(trainerDTO);
+        trainer.settingTrainer(trainerDTO);
         trainerRepository.save(trainer);
-    }
-
-    @Test //추후수정 예정
-    @DisplayName("훈련사 삭제")
-    void findByTrainerId() {
-        //when
-        trainerRepository.deleteTrainer(1L);
-        //then
+        em.flush();
+        em.clear();
 
     }
+
+    @Test
+    @DisplayName("훈련사, 주소 fetchJoin 조회")
+    void findTrainerWithAddress() {
+
+        // When
+        Trainer trainer = trainerRepository.findTrainerWithAddress(1L).orElseThrow(
+                () -> new NotFoundException("NO Found Trainer"));
+
+        // Then
+        assertThat(trainer.getTrainerAddresses().size()).isEqualTo(2);
+
+    }
+
 
 }

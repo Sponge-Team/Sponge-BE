@@ -40,19 +40,6 @@ public class TrainerController {
         return new ResponseEntity<>(trainer, HttpStatus.OK);
     }
 
-//    /**
-//     * 훈련사 정보 수정
-//     * @param trainerId
-//     * @param trainerDTO
-//     * @return
-//     */
-//    @PutMapping("/{trainerId}")
-//    public ResponseEntity<TrainerDTO> modifyTrainer(@PathVariable("trainerId") Long trainerId, @RequestBody TrainerDTO trainerDTO) {
-//        trainerService.updateTrainer(trainerId, trainerDTO);
-//        TrainerDTO trainer = trainerService.findTrainer(trainerId);
-//        return new ResponseEntity<>(trainer,HttpStatus.OK);
-//    }
-//
     /**
      * 회원탈퇴
      * @param trainerId
