@@ -1,5 +1,6 @@
 package com.petweb.sponge.trainer.repository;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.TestConfig;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.AddressDTO;
@@ -72,7 +73,8 @@ class TrainerRepositoryTest {
     void findTrainerWithAddress() {
 
         // When
-        Trainer trainer = trainerRepository.findTrainerWithAddress(1L);
+        Trainer trainer = trainerRepository.findTrainerWithAddress(1L).orElseThrow(
+                () -> new NotFoundException("NO Found Trainer"));
 
         // Then
         assertThat(trainer.getTrainerAddresses().size()).isEqualTo(2);

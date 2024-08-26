@@ -7,6 +7,8 @@ import com.petweb.sponge.user.domain.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
+import java.util.Optional;
+
 import static com.petweb.sponge.pet.domain.QPet.*;
 import static com.petweb.sponge.user.domain.QUser.*;
 import static com.petweb.sponge.user.domain.QUserAddress.*;
@@ -21,13 +23,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
     }
 
     @Override
-    public User findUserWithAddress(Long userId) {
-        return queryFactory
+    public Optional<User> findUserWithAddress(Long userId) {
+        User foundUser = queryFactory
                 .selectDistinct(user)
                 .from(user)
                 .leftJoin(user.userAddresses, userAddress).fetchJoin()
                 .where(user.id.eq(userId))
                 .fetchOne();
+        return Optional.ofNullable(foundUser);
     }
 
     @Override
@@ -35,10 +38,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
         queryFactory
                 .delete(userAddress)
                 .where(userAddress.user.id.eq(userId))
-                .execute();
-        queryFactory
-                .delete(pet)
-                .where(pet.user.id.eq(userId))
                 .execute();
         queryFactory
                 .delete(user)

@@ -1,5 +1,6 @@
 package com.petweb.sponge.user.repository;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.TestConfig;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,7 +65,8 @@ class UserRepositoryTest {
     void findUserWithAddress() {
 
         // When
-        User user = userRepository.findUserWithAddress(1L);
+        User user = userRepository.findUserWithAddress(1L).orElseThrow(
+                () -> new NotFoundException("NO Found USER"));
 
         // Then
         assertThat(user.getUserAddresses().size()).isEqualTo(2);

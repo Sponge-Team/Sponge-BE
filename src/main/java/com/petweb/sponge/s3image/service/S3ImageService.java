@@ -14,12 +14,19 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class S3UploadService {
+public class S3ImageService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final AmazonS3 amazonS3;
 
+    /**
+     * 복수의 사진 파일 AWS에 저장
+     *
+     * @param multipartFile
+     * @param dir
+     * @return
+     */
     public List<String> saveImages(List<MultipartFile> multipartFile, String dir) {
         List<String> fileNameList = new ArrayList<>();
 
@@ -40,6 +47,17 @@ public class S3UploadService {
 
 
         return fileNameList;
+    }
+
+    /**
+     * 복수의 사진 파일 AWS에서 삭제
+     *
+     * @param fileNames
+     */
+    public void deleteImages(List<String> fileNames) {
+        for (String fileName : fileNames) {
+            amazonS3.deleteObject(bucket, fileName);
+        }
     }
 
     // 파일명 중복 방지

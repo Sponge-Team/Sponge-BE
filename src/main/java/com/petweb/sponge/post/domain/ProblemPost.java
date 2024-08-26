@@ -37,11 +37,11 @@ public class ProblemPost {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id")
+    @JoinColumn(name = "pet_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Pet pet;
 
     @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)

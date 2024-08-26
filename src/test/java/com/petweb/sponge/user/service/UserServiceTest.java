@@ -68,7 +68,7 @@ class UserServiceTest {
     @DisplayName("유저 정보 단건조회")
     void findUser() {
         // Given
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.findUserWithAddress(anyLong())).willReturn(Optional.of(user));
 
         // When
         UserDTO findUser = userService.findUser(1L);

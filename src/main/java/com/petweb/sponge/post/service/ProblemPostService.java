@@ -7,6 +7,7 @@ import com.petweb.sponge.post.domain.PostCategory;
 import com.petweb.sponge.post.domain.PostImage;
 import com.petweb.sponge.post.domain.ProblemPost;
 import com.petweb.sponge.post.domain.Tag;
+import com.petweb.sponge.post.dto.PostDetailDto;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.repository.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -16,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +31,32 @@ public class ProblemPostService {
 
     /**
      * 글 단건 조회
-     *
+     * TODO 컬렉션 다수 조회 최적화 필요
      * @param problemPostId
+     * @return
      */
-    public void findPost(Long problemPostId) {
-        ProblemPost problemPost = problemPostRepository.findById(problemPostId).orElseThrow(
-                () -> new NotFoundException("NO Found Post"));
+    public PostDetailDto findPost(Long problemPostId) {
+        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
 
+        return PostDetailDto.builder()
+                .userId(problemPost.getUser().getId())
+                .problemPostId(problemPost.getId())
+                .title(problemPost.getTitle())
+                .content(problemPost.getContent())
+                .duration(problemPost.getDuration())
+                .likeCount(problemPost.getLikeCount())
+                .petName(problemPost.getPet().getName())
+                .breed(problemPost.getPet().getBreed())
+                .gender(problemPost.getPet().getGender())
+                .age(problemPost.getPet().getAge())
+                .weight(problemPost.getPet().getWeight())
+                .categoryCodeList(problemPost.getPostCategories().stream()
+                        .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+                .hasTagList(problemPost.getTags().stream()
+                        .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
+                .imageUrlList(problemPost.getPostImages().stream()
+                        .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
+                .build();
 
     }
 
@@ -90,14 +108,13 @@ public class ProblemPostService {
     }
 
     /**
-     * 글 삭제 (FK관련해서 삭제할 시 수정 필요)
+     * 글 삭제
      *
      * @param problemPostId
      */
     @Transactional
     public void deletePost(Long problemPostId) {
         problemPostRepository.deletePost(problemPostId);
-
     }
 
 

@@ -1,9 +1,11 @@
 package com.petweb.sponge.post.repository;
 
+import com.petweb.sponge.pet.domain.QPet;
 import com.petweb.sponge.post.domain.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
+import static com.petweb.sponge.pet.domain.QPet.*;
 import static com.petweb.sponge.post.domain.QPostCategory.*;
 import static com.petweb.sponge.post.domain.QPostImage.*;
 import static com.petweb.sponge.post.domain.QPostRecommend.*;
@@ -16,6 +18,17 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
 
     public ProblemPostRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public ProblemPost findPostWithType(Long problemPostId) {
+        return   queryFactory
+                .selectFrom(problemPost)
+                .leftJoin(problemPost.pet, pet).fetchJoin()                    // Pet 정보 조인
+                .leftJoin(problemPost.postCategories, postCategory).fetchJoin() // PostCategory 정보 조인
+                .where(problemPost.id.eq(problemPostId))
+                .fetchOne();
+
     }
 
     @Override

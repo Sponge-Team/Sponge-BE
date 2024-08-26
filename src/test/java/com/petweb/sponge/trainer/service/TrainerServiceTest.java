@@ -75,7 +75,7 @@ class TrainerServiceTest {
     @DisplayName("훈련사 정보 단건 조회")
     void findTrainer() {
         // Given
-        given(trainerRepository.findById(anyLong())).willReturn(Optional.of(trainer));
+        given(trainerRepository.findTrainerWithAddress(anyLong())).willReturn(Optional.of(trainer));
 
         // When
         TrainerDTO findTrainer = trainerService.findTrainer(1L);

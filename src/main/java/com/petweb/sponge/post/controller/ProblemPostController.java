@@ -1,9 +1,12 @@
 package com.petweb.sponge.post.controller;
 
+import com.petweb.sponge.post.dto.PostDetailDto;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.service.ProblemPostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,11 +20,14 @@ public class ProblemPostController {
 
     /**
      * 글 단건 조회
+     *
      * @param problemPostId
+     * @return
      */
     @GetMapping("/{problemPostId}")
-    public void getPost(@PathVariable("problemPostId")Long problemPostId) {
-        problemPostService.findPost(problemPostId);
+    public ResponseEntity<PostDetailDto> getPost(@PathVariable("problemPostId")Long problemPostId) {
+        PostDetailDto problemPost = problemPostService.findPost(problemPostId);
+        return new ResponseEntity<>(problemPost, HttpStatus.OK);
     }
     /**
      * 글 작성 저장
@@ -34,6 +40,7 @@ public class ProblemPostController {
 
     /**
      * 글 삭제
+     *
      * @param problemPostId
      */
     @DeleteMapping("/{problemPostId}")

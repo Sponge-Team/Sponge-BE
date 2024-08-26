@@ -28,7 +28,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDTO findUser(Long userId) {
         // user,address 한번에 조회
-        User user = userRepository.findUserWithAddress(userId);
+        User user = userRepository.findUserWithAddress(userId).orElseThrow(
+                () -> new NotFoundException("NO Found USER"));
         return toDto(user);
     }
 
@@ -52,7 +53,7 @@ public class UserService {
     }
 
     /**
-     * 유저 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
+     * 유저 정보 삭제
      *
      * @param userId
      */

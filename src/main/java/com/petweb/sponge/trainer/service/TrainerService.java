@@ -29,7 +29,8 @@ public class TrainerService {
     @Transactional(readOnly = true)
     public TrainerDTO findTrainer(Long trainerId) {
         // trainer, address 한번에 조회
-        Trainer trainer = trainerRepository.findTrainerWithAddress(trainerId);
+        Trainer trainer = trainerRepository.findTrainerWithAddress(trainerId).orElseThrow(
+                () -> new NotFoundException("NO Found Trainer"));
         return toDto(trainer);
     }
 
@@ -53,31 +54,6 @@ public class TrainerService {
 
     }
 
-//    /**
-//     * 훈련사 정보 수정 (변경 감지)
-//     * @param trainerId
-//     * @param trainerDTO
-//     * @return
-//     */
-//    @Transactional
-//    public void updateTrainer(Long trainerId, TrainerDTO trainerDTO) {
-//        Trainer trainer = trainerRepository.findByTrainerId(trainerId);
-//
-//        if (trainer == null) {
-//            throw new RuntimeException("Trainer not found");
-//        }
-//        //trainer 수정
-//        trainer.changeTrainerInfo(trainerDTO.getContent()
-//                , trainerDTO.getYears()
-//                , trainerDTO.getHistory()
-//                , trainerDTO.getCity()
-//                , trainerDTO.getTown());
-//        //user 수정
-//        User user = trainer.getUser();
-//        user.changeUserInfo(trainerDTO.getName(),1,trainerDTO.getProfileImgUrl());
-//
-//    }
-//
     /**
      * 훈련사 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
      *
