@@ -9,6 +9,7 @@ import com.petweb.sponge.post.domain.ProblemPost;
 import com.petweb.sponge.post.domain.Tag;
 import com.petweb.sponge.post.dto.PostDetailDto;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
+import com.petweb.sponge.post.dto.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
@@ -17,46 +18,41 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProblemPostService {
 
-    private final ProblemPostRepository problemPostRepository;
     private final UserRepository userRepository;
     private final PetRepository petRepository;
+    private final ProblemPostRepository problemPostRepository;
     private final ProblemTypeRepository problemTypeRepository;
 
 
     /**
      * 글 단건 조회
-     * TODO 컬렉션 다수 조회 최적화 필요
+     * TODO ToOne관계 다수 조회 최적화 필요
+     *
      * @param problemPostId
      * @return
      */
     public PostDetailDto findPost(Long problemPostId) {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
+        return toDetailDto(problemPost);
+    }
 
-        return PostDetailDto.builder()
-                .userId(problemPost.getUser().getId())
-                .problemPostId(problemPost.getId())
-                .title(problemPost.getTitle())
-                .content(problemPost.getContent())
-                .duration(problemPost.getDuration())
-                .likeCount(problemPost.getLikeCount())
-                .petName(problemPost.getPet().getName())
-                .breed(problemPost.getPet().getBreed())
-                .gender(problemPost.getPet().getGender())
-                .age(problemPost.getPet().getAge())
-                .weight(problemPost.getPet().getWeight())
-                .categoryCodeList(problemPost.getPostCategories().stream()
-                        .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
-                .hasTagList(problemPost.getTags().stream()
-                        .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
-                .imageUrlList(problemPost.getPostImages().stream()
-                        .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
-                .build();
+    /**
+     * 카테고리별 글 전체 조회
+     *
+     * @param problemTypeCode
+     * @return
+     */
+    public List<ProblemPostListDTO> findPostList(Long problemTypeCode) {
+        List<ProblemPost> problemPosts = problemPostRepository.findAllPostByProblemCode(problemTypeCode);
+        return toPostListDto(problemPosts);
 
     }
 
@@ -95,11 +91,11 @@ public class ProblemPostService {
 
         //PostImage클래스 생성해서 저장
         problemPostDTO.getImageUrlList().stream().map(imageUrl ->
-                PostImage.builder()
-                        .imageUrl(imageUrl)
-                        .problemPost(problemPost)
-                        .build()
-        ).collect(Collectors.toList())
+                        PostImage.builder()
+                                .imageUrl(imageUrl)
+                                .problemPost(problemPost)
+                                .build()
+                ).collect(Collectors.toList())
                 .forEach(postImage -> problemPost.getPostImages().add(postImage));
 
 
@@ -134,6 +130,55 @@ public class ProblemPostService {
                 .user(user)
                 .pet(pet).build();
 
+    }
+
+    /**
+     * Dto로 변환
+     *
+     * @param problemPost
+     * @return
+     */
+    private PostDetailDto toDetailDto(ProblemPost problemPost) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return PostDetailDto.builder()
+                .userId(problemPost.getUser().getId())
+                .problemPostId(problemPost.getId())
+                .title(problemPost.getTitle())
+                .content(problemPost.getContent())
+                .duration(problemPost.getDuration())
+                .likeCount(problemPost.getLikeCount())
+                .petName(problemPost.getPet().getName())
+                .breed(problemPost.getPet().getBreed())
+                .gender(problemPost.getPet().getGender())
+                .age(problemPost.getPet().getAge())
+                .weight(problemPost.getPet().getWeight())
+                .createdAt(formatter.format(problemPost.getCreatedAt()))
+                .problemTypeList(problemPost.getPostCategories().stream()
+                        .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+                .hasTagList(problemPost.getTags().stream()
+                        .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
+                .imageUrlList(problemPost.getPostImages().stream()
+                        .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
+                .build();
+    }
+
+    /**
+     * Dto로 변환
+     * @param problemPosts
+     * @return
+     */
+    private  List<ProblemPostListDTO> toPostListDto(List<ProblemPost> problemPosts) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return problemPosts.stream().map(problemPost ->
+                ProblemPostListDTO.builder()
+                        .problemPostId(problemPost.getId())
+                        .title(problemPost.getTitle())
+                        .content(problemPost.getContent())
+                        .likeCount(problemPost.getLikeCount())
+                        .createdAt(formatter.format(problemPost.getCreatedAt()))
+                        .problemTypeList(problemPost.getPostCategories().stream()
+                                .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+                        .build()).collect(Collectors.toList());
     }
 
 

@@ -55,7 +55,7 @@ public class TrainerService {
     }
 
     /**
-     * 훈련사 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
+     * 훈련사 정보 삭제
      *
      * @param trainerId
      */

@@ -21,8 +21,8 @@ public class PostDetailDto {
     private int gender; //반려견 성별
     private int age; //반려견 나이
     private float weight; //반려견 몸무게
-
-    private List<Long> categoryCodeList;
+    private String createdAt; //생성시간
+    private List<Long> problemTypeList;
     private List<String> hasTagList;
     private List<String> imageUrlList;
 }
