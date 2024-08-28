@@ -3,13 +3,11 @@ package com.petweb.sponge.post.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
-import com.petweb.sponge.post.domain.PostCategory;
-import com.petweb.sponge.post.domain.PostImage;
-import com.petweb.sponge.post.domain.ProblemPost;
-import com.petweb.sponge.post.domain.Tag;
+import com.petweb.sponge.post.domain.*;
 import com.petweb.sponge.post.dto.PostDetailDto;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.dto.ProblemPostListDTO;
+import com.petweb.sponge.post.repository.PostRecommendRepository;
 import com.petweb.sponge.post.repository.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
@@ -20,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +29,7 @@ public class ProblemPostService {
     private final PetRepository petRepository;
     private final ProblemPostRepository problemPostRepository;
     private final ProblemTypeRepository problemTypeRepository;
+    private final PostRecommendRepository postRecommendRepository;
 
 
     /**
@@ -39,6 +39,7 @@ public class ProblemPostService {
      * @param problemPostId
      * @return
      */
+    @Transactional(readOnly = true)
     public PostDetailDto findPost(Long problemPostId) {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
         return toDetailDto(problemPost);
@@ -50,6 +51,7 @@ public class ProblemPostService {
      * @param problemTypeCode
      * @return
      */
+    @Transactional(readOnly = true)
     public List<ProblemPostListDTO> findPostList(Long problemTypeCode) {
         List<ProblemPost> problemPosts = problemPostRepository.findAllPostByProblemCode(problemTypeCode);
         return toPostListDto(problemPosts);
@@ -115,6 +117,31 @@ public class ProblemPostService {
 
 
     /**
+     * 추천수 업데이트
+     *
+     * @param problemPostId
+     * @param loginId
+     */
+    public void updateLikeCount(Long problemPostId, Long loginId) {
+        Optional<PostRecommend> recommend = postRecommendRepository.findRecommend(problemPostId, loginId);
+        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
+        User user = userRepository.findById(loginId).orElseThrow(
+                () -> new NotFoundException("NO Found USER"));
+        if (recommend.isPresent()) {
+            problemPost.decreaseCount();
+            postRecommendRepository.delete(recommend.get());
+        } else {
+            PostRecommend postRecommend = PostRecommend.builder()
+                    .problemPost(problemPost)
+                    .user(user)
+                    .build();
+            problemPost.increaseCount();
+            postRecommendRepository.save(postRecommend);
+        }
+    }
+
+
+    /**
      * entity로 변환
      *
      * @param problemPostDTO
@@ -164,10 +191,11 @@ public class ProblemPostService {
 
     /**
      * Dto로 변환
+     *
      * @param problemPosts
      * @return
      */
-    private  List<ProblemPostListDTO> toPostListDto(List<ProblemPost> problemPosts) {
+    private List<ProblemPostListDTO> toPostListDto(List<ProblemPost> problemPosts) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return problemPosts.stream().map(problemPost ->
                 ProblemPostListDTO.builder()

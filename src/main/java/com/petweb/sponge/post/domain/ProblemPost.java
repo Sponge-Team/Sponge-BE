@@ -53,7 +53,14 @@ public class ProblemPost {
     @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
     private List<PostImage> postImages= new ArrayList<>();
 
-
+    // 추천수 증가
+    public void increaseCount() {
+        this.likeCount++;
+    }
+    // 추천수 감소
+    public void decreaseCount() {
+        this.likeCount--;
+    }
     @Builder
     public ProblemPost(String title, String content, String duration, int likeCount,User user, Pet pet) {
         this.title = title;

@@ -3,6 +3,7 @@ package com.petweb.sponge.post.domain;
 import com.petweb.sponge.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class PostRecommend {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
+
+    @Builder
+    public PostRecommend(ProblemPost problemPost, User user) {
+        this.problemPost = problemPost;
+        this.user = user;
+    }
 }

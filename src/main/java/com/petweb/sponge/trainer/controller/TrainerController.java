@@ -35,9 +35,8 @@ public class TrainerController {
      * @return
      */
     @PostMapping()
-    public ResponseEntity<TrainerDTO> signup(@RequestBody TrainerDTO trainerDTO) {
-        TrainerDTO trainer = trainerService.saveTrainer(authorizationUtil.getLoginId(),trainerDTO);
-        return new ResponseEntity<>(trainer, HttpStatus.OK);
+    public void signup(@RequestBody TrainerDTO trainerDTO) {
+        trainerService.saveTrainer(authorizationUtil.getLoginId(),trainerDTO);
     }
 
     /**

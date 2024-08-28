@@ -34,6 +34,7 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
 
     }
 
+    @Override
     public List<ProblemPost> findAllPostByProblemCode(Long problemTypeCode) {
         List<Long> problemPostIds = queryFactory
                 .select(postCategory.problemPost.id)

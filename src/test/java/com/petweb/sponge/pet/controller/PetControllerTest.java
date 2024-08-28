@@ -69,14 +69,13 @@ class PetControllerTest {
     void registerPet() throws Exception {
         // Given
         given(authorizationUtil.getLoginId()).willReturn(1L);
-        given(petService.savePet(anyLong(), any(PetDTO.class))).willReturn(petDTO);
+        willDoNothing().given(petService).savePet(anyLong(),any(PetDTO.class));
 
         // When // Then
         mockMvc.perform(post("/api/pet").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(petDTO)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(petDTO)));
+                .andExpect(status().isOk());
     }
 
     @Test
