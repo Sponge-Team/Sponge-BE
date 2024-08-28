@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.post.dto.PostDetailDto;
+import com.petweb.sponge.post.dto.PostRecommendDto;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.dto.ProblemPostListDTO;
 import com.petweb.sponge.post.service.ProblemPostService;
@@ -28,7 +29,7 @@ public class ProblemPostController {
      * @return
      */
     @GetMapping("/{problemPostId}")
-    public ResponseEntity<PostDetailDto> getPost(@PathVariable("problemPostId")Long problemPostId) {
+    public ResponseEntity<PostDetailDto> getPost(@PathVariable("problemPostId") Long problemPostId) {
         PostDetailDto problemPost = problemPostService.findPost(problemPostId);
         return new ResponseEntity<>(problemPost, HttpStatus.OK);
     }
@@ -40,17 +41,20 @@ public class ProblemPostController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<ProblemPostListDTO>> getAllPost(@RequestParam("problemTypeCode")Long problemTypeCode) {
+    public ResponseEntity<List<ProblemPostListDTO>> getAllPost(@RequestParam("problemTypeCode") Long problemTypeCode) {
         List<ProblemPostListDTO> problemPostList = problemPostService.findPostList(problemTypeCode);
-        return new ResponseEntity<>(problemPostList,HttpStatus.OK);
+        return new ResponseEntity<>(problemPostList, HttpStatus.OK);
     }
+
     /**
      * 글 작성 저장
+     * TODO 로그인타입이 User인지 trainer인지 aop로 체크
+     *
      * @param problemPostDTO
      */
     @PostMapping()
     public void writePost(@RequestBody ProblemPostDTO problemPostDTO) {
-            problemPostService.savePost(authorizationUtil.getLoginId(),problemPostDTO);
+        problemPostService.savePost(authorizationUtil.getLoginId(), problemPostDTO);
     }
 
     /**
@@ -59,9 +63,18 @@ public class ProblemPostController {
      * @param problemPostId
      */
     @DeleteMapping("/{problemPostId}")
-    public void removePost(@PathVariable("problemPostId")Long problemPostId) {
+    public void removePost(@PathVariable("problemPostId") Long problemPostId) {
         problemPostService.deletePost(problemPostId);
     }
 
 
+    /**
+     * 추천수 업데이트
+     *
+     * @param postRecommendDto
+     */
+    @PostMapping("/like")
+    public void updateLikeCount(@RequestBody PostRecommendDto postRecommendDto) {
+        problemPostService.updateLikeCount(postRecommendDto.getProblemPostId(), authorizationUtil.getLoginId());
+    }
 }

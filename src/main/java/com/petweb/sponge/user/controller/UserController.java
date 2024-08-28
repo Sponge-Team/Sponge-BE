@@ -36,9 +36,9 @@ public class UserController {
      * @return
      */
     @PostMapping()
-    public ResponseEntity<UserDTO> signup(@RequestBody UserDTO userDTO) {
-        UserDTO user = userService.saveUser(authorizationUtil.getLoginId(), userDTO);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public void signup(@RequestBody UserDTO userDTO) {
+         userService.saveUser(authorizationUtil.getLoginId(), userDTO);
+
     }
 
     /**

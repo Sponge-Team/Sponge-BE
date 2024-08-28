@@ -43,15 +43,13 @@ public class TrainerService {
      * @return
      */
     @Transactional
-    public TrainerDTO saveTrainer(Long loginId, TrainerDTO trainerDTO) {
+    public void saveTrainer(Long loginId, TrainerDTO trainerDTO) {
         //로그인하자마자 저장 되어있던 trainer 조회
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found Trainer"));
         //trainer에 정보 셋팅 및 저장
         trainer.settingTrainer(trainerDTO);
-        Trainer savedTrainer = trainerRepository.save(trainer);
-        return toDto(savedTrainer);
-
+         trainerRepository.save(trainer);
     }
 
     /**

@@ -78,13 +78,12 @@ class UserControllerTest {
     void signup() throws Exception {
         // Given
         given(authorizationUtil.getLoginId()).willReturn(1L);
-        given(userService.saveUser(anyLong(),any(UserDTO.class))).willReturn(userDTO);
+        willDoNothing().given(userService).saveUser(anyLong(),any(UserDTO.class));
 
         // When // Then
         mockMvc.perform(post("/api/user").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
+                .andExpect(status().isOk());
     }
 }

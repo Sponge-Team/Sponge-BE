@@ -90,14 +90,12 @@ class TrainerControllerTest {
     void signup() throws Exception {
         // Given
         given(authorizationUtil.getLoginId()).willReturn(1L);
-        given(trainerService.saveTrainer(anyLong(), any(TrainerDTO.class))).willReturn(trainerDTO);
-
+        willDoNothing().given(trainerService).saveTrainer(anyLong(),any(TrainerDTO.class));
         // When // Then
         mockMvc.perform(post("/api/trainer").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(trainerDTO)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(trainerDTO)));
+                .andExpect(status().isOk());
     }
 
 //    @Test

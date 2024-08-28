@@ -34,6 +34,7 @@ public class PetController {
 
     /**
      * 반려동물 전체 조회
+     *
      * @param userId
      * @return
      */
@@ -47,12 +48,10 @@ public class PetController {
      * 반려동물 등록
      *
      * @param petDTO
-     * @return
      */
     @PostMapping()
-    public ResponseEntity<PetDTO> registerPet(@RequestBody PetDTO petDTO) {
-        PetDTO pet = petService.savePet(authorizationUtil.getLoginId(), petDTO);
-        return new ResponseEntity<>(pet, HttpStatus.OK);
+    public void registerPet(@RequestBody PetDTO petDTO) {
+        petService.savePet(authorizationUtil.getLoginId(), petDTO);
     }
 
     /**

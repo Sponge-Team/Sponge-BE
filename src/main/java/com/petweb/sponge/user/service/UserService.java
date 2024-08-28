@@ -41,15 +41,13 @@ public class UserService {
      * @return
      */
     @Transactional
-    public UserDTO saveUser(Long loginId, UserDTO userDTO) {
+    public void saveUser(Long loginId, UserDTO userDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found USER"));
 
         user.settingUser(userDTO);
-
-        User savedUser = userRepository.save(user);
-        return toDto(savedUser);
+        userRepository.save(user);
     }
 
     /**

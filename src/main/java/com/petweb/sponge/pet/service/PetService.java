@@ -48,10 +48,9 @@ public class PetService {
      * 펫 정보 저장
      * @param loginId
      * @param petDTO
-     * @return
      */
     @Transactional
-    public PetDTO savePet(Long loginId, PetDTO petDTO) {
+    public void savePet(Long loginId, PetDTO petDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found USER"));
@@ -64,8 +63,7 @@ public class PetService {
                 .user(user)
                 .build();
         //반려견 저장
-        Pet savedPet = petRepository.save(pet);
-        return toDto(savedPet);
+      petRepository.save(pet);
     }
 
     /**
