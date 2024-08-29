@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.controller;
 
-import com.petweb.sponge.post.dto.PostDetailDto;
-import com.petweb.sponge.post.dto.PostRecommendDto;
+import com.petweb.sponge.post.dto.PostDetailDTO;
+import com.petweb.sponge.post.dto.PostRecommendDTO;
 import com.petweb.sponge.post.dto.ProblemPostDTO;
 import com.petweb.sponge.post.dto.ProblemPostListDTO;
 import com.petweb.sponge.post.service.ProblemPostService;
@@ -29,8 +29,8 @@ public class ProblemPostController {
      * @return
      */
     @GetMapping("/{problemPostId}")
-    public ResponseEntity<PostDetailDto> getPost(@PathVariable("problemPostId") Long problemPostId) {
-        PostDetailDto problemPost = problemPostService.findPost(problemPostId);
+    public ResponseEntity<PostDetailDTO> getPost(@PathVariable("problemPostId") Long problemPostId) {
+        PostDetailDTO problemPost = problemPostService.findPost(problemPostId);
         return new ResponseEntity<>(problemPost, HttpStatus.OK);
     }
 
@@ -70,11 +70,11 @@ public class ProblemPostController {
 
     /**
      * 추천수 업데이트
-     *
+     * TODO 유저만 누를 수 있게해야함
      * @param postRecommendDto
      */
     @PostMapping("/like")
-    public void updateLikeCount(@RequestBody PostRecommendDto postRecommendDto) {
+    public void updateLikeCount(@RequestBody PostRecommendDTO postRecommendDto) {
         problemPostService.updateLikeCount(postRecommendDto.getProblemPostId(), authorizationUtil.getLoginId());
     }
 }

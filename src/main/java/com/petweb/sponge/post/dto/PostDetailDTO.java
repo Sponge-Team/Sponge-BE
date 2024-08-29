@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class PostDetailDto {
+public class PostDetailDTO {
 
     private Long userId;
     private Long problemPostId;

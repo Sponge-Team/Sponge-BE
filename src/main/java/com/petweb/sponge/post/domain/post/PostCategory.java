@@ -1,6 +1,6 @@
-package com.petweb.sponge.post.domain;
+package com.petweb.sponge.post.domain.post;
 
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.post.domain.ProblemType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "post_recommend")
-public class PostRecommend {
+@Table(name = "post_category")
+public class PostCategory {
 
     @Id
     @GeneratedValue
@@ -22,12 +22,11 @@ public class PostRecommend {
     private ProblemPost problemPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
-
+    @JoinColumn(name = "problem_type_id")
+    private ProblemType problemType;
     @Builder
-    public PostRecommend(ProblemPost problemPost, User user) {
+    public PostCategory(ProblemPost problemPost, ProblemType problemType) {
         this.problemPost = problemPost;
-        this.user = user;
+        this.problemType = problemType;
     }
 }

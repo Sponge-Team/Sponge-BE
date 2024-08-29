@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.domain;
+package com.petweb.sponge.post.domain.post;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
