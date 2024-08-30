@@ -47,6 +47,12 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<TrainerAddress> trainerAddresses = new ArrayList<>();
 
+    public void increaseAdoptCount() {
+        this.adopt_count++;
+    }
+    public void decreaseAdoptCount() {
+        this.adopt_count--;
+    }
     @Builder
     public Trainer(String email, String name) {
         this.email = email;

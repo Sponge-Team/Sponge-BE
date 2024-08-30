@@ -4,9 +4,9 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.post.*;
-import com.petweb.sponge.post.dto.PostDetailDTO;
-import com.petweb.sponge.post.dto.ProblemPostDTO;
-import com.petweb.sponge.post.dto.ProblemPostListDTO;
+import com.petweb.sponge.post.dto.post.PostDetailDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.PostRecommendRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -127,6 +127,10 @@ public class ProblemPostService {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
         User user = userRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found USER"));
+        /**
+         * 추천이 이미 있다면 추천을 삭제 추천수 -1
+         * 추천이 없다면 추천을 저장 추천수 +1
+         */
         if (recommend.isPresent()) {
             problemPost.decreaseLikeCount();
             postRecommendRepository.delete(recommend.get());

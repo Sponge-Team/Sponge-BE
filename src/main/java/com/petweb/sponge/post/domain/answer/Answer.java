@@ -32,16 +32,20 @@ public class Answer {
     private Timestamp modifiedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_post_id")
+    @JoinColumn(name = "problem_post_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private ProblemPost problemPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainer_id")
+    @JoinColumn(name = "trainer_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Trainer trainer;
 
-    @OneToOne(mappedBy = "answer",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
     private AdoptAnswer adoptAnswer;
 
+    // 내용 업데이트
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     @Builder
     public Answer(String content, ProblemPost problemPost, Trainer trainer) {

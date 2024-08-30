@@ -1,9 +1,9 @@
 package com.petweb.sponge.post.controller;
 
-import com.petweb.sponge.post.dto.PostDetailDTO;
-import com.petweb.sponge.post.dto.PostRecommendDTO;
-import com.petweb.sponge.post.dto.ProblemPostDTO;
-import com.petweb.sponge.post.dto.ProblemPostListDTO;
+import com.petweb.sponge.post.dto.post.PostDetailDTO;
+import com.petweb.sponge.post.dto.post.PostRecommendDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.service.ProblemPostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class ProblemPostController {
 
     /**
      * 카테고리별 글 전체조회
-     *
+     * TODO 전체버튼을 클릭하면 어떻게 전체를 조회할지
      * @param problemTypeCode
      * @return
      */
@@ -71,6 +71,7 @@ public class ProblemPostController {
     /**
      * 추천수 업데이트
      * TODO 유저만 누를 수 있게해야함
+     *
      * @param postRecommendDto
      */
     @PostMapping("/like")
