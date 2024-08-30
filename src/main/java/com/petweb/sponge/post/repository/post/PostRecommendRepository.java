@@ -1,6 +1,6 @@
-package com.petweb.sponge.post.repository;
+package com.petweb.sponge.post.repository.post;
 
-import com.petweb.sponge.post.domain.PostRecommend;
+import com.petweb.sponge.post.domain.post.PostRecommend;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

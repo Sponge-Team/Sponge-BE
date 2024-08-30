@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.domain;
+package com.petweb.sponge.post.domain.post;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,20 +9,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "tag")
-public class Tag {
-
+@Table(name = "post_image")
+public class PostImage {
     @Id
     @GeneratedValue
     private Long id;
-    private String hashtag;
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_post_id")
     private ProblemPost problemPost;
 
     @Builder
-    public Tag(String hashtag, ProblemPost problemPost) {
-        this.hashtag = hashtag;
+    public PostImage(String imageUrl, ProblemPost problemPost) {
+        this.imageUrl = imageUrl;
         this.problemPost = problemPost;
     }
 }

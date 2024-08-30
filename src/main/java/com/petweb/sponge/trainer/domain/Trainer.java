@@ -33,6 +33,9 @@ public class Trainer {
     private String profileImgUrl; //프로필 이미지 링크
     private String content; //자기소개
     private int years; //연차
+
+    private int adopt_count; // 채택 답변 수
+    private int chat_count; // 1대1 채팅 수
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
@@ -44,6 +47,12 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<TrainerAddress> trainerAddresses = new ArrayList<>();
 
+    public void increaseAdoptCount() {
+        this.adopt_count++;
+    }
+    public void decreaseAdoptCount() {
+        this.adopt_count--;
+    }
     @Builder
     public Trainer(String email, String name) {
         this.email = email;

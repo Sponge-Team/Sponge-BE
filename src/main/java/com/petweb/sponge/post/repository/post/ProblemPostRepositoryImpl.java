@@ -1,19 +1,18 @@
-package com.petweb.sponge.post.repository;
+package com.petweb.sponge.post.repository.post;
 
-import com.petweb.sponge.post.domain.*;
+import com.petweb.sponge.post.domain.post.ProblemPost;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.petweb.sponge.pet.domain.QPet.*;
-import static com.petweb.sponge.post.domain.QPostCategory.*;
-import static com.petweb.sponge.post.domain.QPostImage.*;
-import static com.petweb.sponge.post.domain.QPostRecommend.*;
-import static com.petweb.sponge.post.domain.QProblemPost.*;
-import static com.petweb.sponge.post.domain.QTag.*;
+import static com.petweb.sponge.post.domain.post.QPostCategory.*;
+import static com.petweb.sponge.post.domain.post.QPostImage.*;
+import static com.petweb.sponge.post.domain.post.QPostRecommend.*;
+import static com.petweb.sponge.post.domain.post.QProblemPost.*;
+import static com.petweb.sponge.post.domain.post.QTag.*;
 
 public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
 

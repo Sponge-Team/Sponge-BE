@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.dto;
+package com.petweb.sponge.post.dto.post;
 
 import lombok.Builder;
 import lombok.Getter;

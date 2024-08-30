@@ -1,6 +1,9 @@
-package com.petweb.sponge.post.domain;
+package com.petweb.sponge.post.domain.post;
 
 import com.petweb.sponge.pet.domain.Pet;
+import com.petweb.sponge.post.domain.post.PostCategory;
+import com.petweb.sponge.post.domain.post.PostImage;
+import com.petweb.sponge.post.domain.post.Tag;
 import com.petweb.sponge.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +17,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +31,7 @@ public class ProblemPost {
     private String content; // 글내용
     private String duration; // 문제행동 지속기간
     private int likeCount; // 추천수
+    private int answerCount; // 답변수
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
@@ -54,12 +57,21 @@ public class ProblemPost {
     private List<PostImage> postImages= new ArrayList<>();
 
     // 추천수 증가
-    public void increaseCount() {
+    public void increaseLikeCount() {
         this.likeCount++;
     }
     // 추천수 감소
-    public void decreaseCount() {
+    public void decreaseLikeCount() {
         this.likeCount--;
+    }
+
+    //답변수 증가
+    public void increaseAnswerCount() {
+        this.answerCount++;
+    }
+    //답변수 감소
+    public void decreaseAnswerCount() {
+        this.answerCount--;
     }
     @Builder
     public ProblemPost(String title, String content, String duration, int likeCount,User user, Pet pet) {

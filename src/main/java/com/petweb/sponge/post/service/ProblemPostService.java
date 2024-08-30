@@ -3,12 +3,12 @@ package com.petweb.sponge.post.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
-import com.petweb.sponge.post.domain.*;
-import com.petweb.sponge.post.dto.PostDetailDto;
-import com.petweb.sponge.post.dto.ProblemPostDTO;
-import com.petweb.sponge.post.dto.ProblemPostListDTO;
-import com.petweb.sponge.post.repository.PostRecommendRepository;
-import com.petweb.sponge.post.repository.ProblemPostRepository;
+import com.petweb.sponge.post.domain.post.*;
+import com.petweb.sponge.post.dto.post.PostDetailDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
+import com.petweb.sponge.post.repository.post.PostRecommendRepository;
+import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.repository.UserRepository;
@@ -40,7 +40,7 @@ public class ProblemPostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public PostDetailDto findPost(Long problemPostId) {
+    public PostDetailDTO findPost(Long problemPostId) {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
         return toDetailDto(problemPost);
     }
@@ -127,15 +127,19 @@ public class ProblemPostService {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
         User user = userRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found USER"));
+        /**
+         * 추천이 이미 있다면 추천을 삭제 추천수 -1
+         * 추천이 없다면 추천을 저장 추천수 +1
+         */
         if (recommend.isPresent()) {
-            problemPost.decreaseCount();
+            problemPost.decreaseLikeCount();
             postRecommendRepository.delete(recommend.get());
         } else {
             PostRecommend postRecommend = PostRecommend.builder()
                     .problemPost(problemPost)
                     .user(user)
                     .build();
-            problemPost.increaseCount();
+            problemPost.increaseLikeCount();
             postRecommendRepository.save(postRecommend);
         }
     }
@@ -165,9 +169,9 @@ public class ProblemPostService {
      * @param problemPost
      * @return
      */
-    private PostDetailDto toDetailDto(ProblemPost problemPost) {
+    private PostDetailDTO toDetailDto(ProblemPost problemPost) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        return PostDetailDto.builder()
+        return PostDetailDTO.builder()
                 .userId(problemPost.getUser().getId())
                 .problemPostId(problemPost.getId())
                 .title(problemPost.getTitle())

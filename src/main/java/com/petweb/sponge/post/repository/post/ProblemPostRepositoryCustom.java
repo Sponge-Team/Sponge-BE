@@ -1,6 +1,6 @@
-package com.petweb.sponge.post.repository;
+package com.petweb.sponge.post.repository.post;
 
-import com.petweb.sponge.post.domain.ProblemPost;
+import com.petweb.sponge.post.domain.post.ProblemPost;
 
 import java.util.List;
 
