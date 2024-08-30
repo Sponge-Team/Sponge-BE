@@ -3,6 +3,7 @@ package com.petweb.sponge.post.domain.answer;
 import com.petweb.sponge.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,9 @@ public class AnswerRecommend {
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
+    @Builder
+    public AnswerRecommend(User user, Answer answer) {
+        this.user = user;
+        this.answer = answer;
+    }
 }

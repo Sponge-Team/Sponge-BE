@@ -15,8 +15,8 @@ public class AnswerDetailDTO {
     private String content;
     private int likeCount;
     private boolean adoptCheck; // 채택된건지 안된거지 구분
-
     private boolean postWriter; // 문제행동 글을 작성한 유저인지 아닌지를 구분
+    private String createdAt; //생성시간
 
 
 }

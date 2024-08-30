@@ -3,12 +3,14 @@ package com.petweb.sponge.post.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
+import com.petweb.sponge.post.domain.answer.AnswerRecommend;
 import com.petweb.sponge.post.domain.post.ProblemPost;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerDetailDTO;
 import com.petweb.sponge.post.dto.answer.AnswerUpdateDTO;
 import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
+import com.petweb.sponge.post.repository.answer.AnswerRecommendRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +37,7 @@ public class AnswerService {
     private final ProblemPostRepository problemPostRepository;
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;
+    private final AnswerRecommendRepository answerRecommendRepository;
     private final AuthorizationUtil authorizationUtil;
 
     /**
@@ -124,12 +128,42 @@ public class AnswerService {
     }
 
     /**
+     * 훈련사 답변 추천
+     * @param answerId
+     * @param loginId
+     */
+    @Transactional
+    public void updateLikeCount(Long answerId, Long loginId) {
+        Optional<AnswerRecommend> recommend = answerRecommendRepository.findRecommend(answerId, loginId);
+        Answer answer = answerRepository.findAnswer(answerId);
+        User user = userRepository.findById(loginId).orElseThrow(
+                () -> new NotFoundException("NO Found USER"));
+
+        /**
+         * 추천이 이미 있다면 추천을 삭제 추천수 -1
+         * 추천이 없다면 추천을 저장 추천수 +1
+         */
+        if (recommend.isPresent()) {
+            answer.decreaseLikeCount();
+            answerRecommendRepository.delete(recommend.get());
+        } else {
+            AnswerRecommend answerRecommend = AnswerRecommend.builder()
+                    .answer(answer)
+                    .user(user)
+                    .build();
+            answer.increaseLikeCount();
+            answerRecommendRepository.save(answerRecommend);
+        }
+    }
+
+    /**
      * Dto 변환
      *
      * @param answerList
      * @return
      */
     private List<AnswerDetailDTO> toDetailDto(List<Answer> answerList) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return answerList.stream().map(answer ->
         {
             AdoptAnswer adoptAnswer = answer.getAdoptAnswer();
@@ -152,9 +186,11 @@ public class AnswerService {
                     .likeCount(answer.getLikeCount())
                     .adoptCheck(adoptCheck)
                     .postWriter(postWriter)
+                    .createdAt(formatter.format(answer.getCreatedAt()))
                     .build();
         }).collect(Collectors.toList());
     }
+
 
 
 }

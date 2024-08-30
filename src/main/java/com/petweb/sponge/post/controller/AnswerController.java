@@ -1,9 +1,6 @@
 package com.petweb.sponge.post.controller;
 
-import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
-import com.petweb.sponge.post.dto.answer.AnswerDTO;
-import com.petweb.sponge.post.dto.answer.AnswerDetailDTO;
-import com.petweb.sponge.post.dto.answer.AnswerUpdateDTO;
+import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
@@ -77,10 +74,13 @@ public class AnswerController {
     }
 
     /**
-     * 훈려사 답변 추천
+     * 훈련사 답변 추천
+     * TODO 유저만 추천을 누를 수 있음
+     * @param answerRecommendDTO
      */
     @PostMapping("/like")
-    public void updateLikeCount() {
+    public void updateLikeCount(@RequestBody AnswerRecommendDTO answerRecommendDTO) {
+        answerService.updateLikeCount(answerRecommendDTO.getAnswerId(),authorizationUtil.getLoginId());
 
     }
 

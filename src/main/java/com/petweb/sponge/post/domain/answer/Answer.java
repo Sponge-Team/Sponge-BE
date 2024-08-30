@@ -46,6 +46,14 @@ public class Answer {
     public void setContent(String content) {
         this.content = content;
     }
+    // 추천수 증가
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+    // 추천수 감소
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
 
     @Builder
     public Answer(String content, ProblemPost problemPost, Trainer trainer) {
