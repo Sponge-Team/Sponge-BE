@@ -1,5 +1,7 @@
 package com.petweb.sponge.post.controller;
 
+import com.petweb.sponge.auth.TrainerAuth;
+import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -33,11 +35,10 @@ public class AnswerController {
 
     /**
      * 훈련사 답변 작성
-     * TODO 훈련사인지 아닌지 체크 필요
-     *
      * @param answerDTO
      */
     @PostMapping
+    @TrainerAuth
     public void writeAnswer(@RequestBody AnswerDTO answerDTO) {
         answerService.saveAnswer(authorizationUtil.getLoginId(), answerDTO);
     }
@@ -49,6 +50,7 @@ public class AnswerController {
      * @param answerUpdateDTO
      */
     @PatchMapping("/{answerId}")
+    @TrainerAuth
     public void modifyAnswer(@PathVariable Long answerId, @RequestBody AnswerUpdateDTO answerUpdateDTO) {
         answerService.updateAnswer(answerId, answerUpdateDTO);
     }
@@ -59,26 +61,27 @@ public class AnswerController {
      * @param answerId
      */
     @DeleteMapping("/{answerId}")
+    @TrainerAuth
     public void removeAnswer(@PathVariable Long answerId) {
         answerService.deleteAnswer(answerId, authorizationUtil.getLoginId());
     }
 
     /**
      * 훈련사 답변 채택
-     * TODO 글을 쓴 유저만 채택을 할 수 있음
      * @param adoptAnswerDTO
      */
     @PostMapping("/adopt")
+    @UserAuth
     public void registerAdoptAnswer(@RequestBody AdoptAnswerDTO adoptAnswerDTO) {
         answerService.saveAdoptAnswer(adoptAnswerDTO,authorizationUtil.getLoginId());
     }
 
     /**
      * 훈련사 답변 추천
-     * TODO 유저만 추천을 누를 수 있음
      * @param answerRecommendDTO
      */
     @PostMapping("/like")
+    @UserAuth
     public void updateLikeCount(@RequestBody AnswerRecommendDTO answerRecommendDTO) {
         answerService.updateLikeCount(answerRecommendDTO.getAnswerId(),authorizationUtil.getLoginId());
 

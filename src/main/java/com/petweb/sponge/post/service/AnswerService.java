@@ -109,6 +109,7 @@ public class AnswerService {
 
     /**
      * 답변 채택 저장
+     *
      * @param adoptAnswerDTO
      * @param loginId
      */
@@ -117,6 +118,12 @@ public class AnswerService {
         Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId());
         User user = userRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found USER"));
+        // 글을쓴 유저인지 아닌지 체크
+        if (!answer.getProblemPost().getUser().getId().equals(user.getId())) {
+            // TODO 예외 바꿔주긴 해야함
+            throw new IllegalStateException();
+        }
+
         AdoptAnswer adoptAnswer = AdoptAnswer.builder()
                 .answer(answer)
                 .trainer(answer.getTrainer())
@@ -129,6 +136,7 @@ public class AnswerService {
 
     /**
      * 훈련사 답변 추천
+     *
      * @param answerId
      * @param loginId
      */
@@ -190,7 +198,6 @@ public class AnswerService {
                     .build();
         }).collect(Collectors.toList());
     }
-
 
 
 }

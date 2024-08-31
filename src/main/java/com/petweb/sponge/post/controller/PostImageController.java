@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.controller;
 
+import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.s3image.service.S3ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class PostImageController {
      * @return
      */
     @PostMapping
+    @UserAuth
     public ResponseEntity<List<String>> uploadPostImg(@RequestParam List<MultipartFile> multipartFiles) {
         List<String> saveFiles = s3ImageService.saveImages(multipartFiles, "post");
         return new ResponseEntity<>(saveFiles, HttpStatus.OK);

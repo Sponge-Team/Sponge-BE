@@ -1,5 +1,6 @@
 package com.petweb.sponge.pet.controller;
 
+import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.pet.service.PetService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -49,7 +50,8 @@ public class PetController {
      *
      * @param petDTO
      */
-    @PostMapping()
+    @PostMapping
+    @UserAuth
     public void registerPet(@RequestBody PetDTO petDTO) {
         petService.savePet(authorizationUtil.getLoginId(), petDTO);
     }
@@ -60,6 +62,7 @@ public class PetController {
      * @param petId
      */
     @DeleteMapping("/{petId}")
+    @UserAuth
     public void removePet(@PathVariable("petId") Long petId) {
         petService.deletePet(petId);
     }
