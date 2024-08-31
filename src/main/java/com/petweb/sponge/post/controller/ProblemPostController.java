@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.controller;
 
+import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
 import com.petweb.sponge.post.dto.post.PostRecommendDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
@@ -48,11 +49,11 @@ public class ProblemPostController {
 
     /**
      * 글 작성 저장
-     * TODO 로그인타입이 User인지 trainer인지 aop로 체크
      *
      * @param problemPostDTO
      */
-    @PostMapping()
+    @PostMapping
+    @UserAuth
     public void writePost(@RequestBody ProblemPostDTO problemPostDTO) {
         problemPostService.savePost(authorizationUtil.getLoginId(), problemPostDTO);
     }
@@ -63,6 +64,7 @@ public class ProblemPostController {
      * @param problemPostId
      */
     @DeleteMapping("/{problemPostId}")
+    @UserAuth
     public void removePost(@PathVariable("problemPostId") Long problemPostId) {
         problemPostService.deletePost(problemPostId);
     }
@@ -70,11 +72,11 @@ public class ProblemPostController {
 
     /**
      * 추천수 업데이트
-     * TODO 유저만 누를 수 있게해야함
      *
      * @param postRecommendDto
      */
     @PostMapping("/like")
+    @UserAuth
     public void updateLikeCount(@RequestBody PostRecommendDTO postRecommendDto) {
         problemPostService.updateLikeCount(postRecommendDto.getProblemPostId(), authorizationUtil.getLoginId());
     }
