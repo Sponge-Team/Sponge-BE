@@ -5,6 +5,7 @@ import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.post.*;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
+import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.PostRecommendRepository;
@@ -194,6 +195,14 @@ public class ProblemPostService {
     }
 
     /**
+     * 북마크 저장
+     * @param postIdDTO
+     */
+    public void saveBookmark(PostIdDTO postIdDTO) {
+
+    }
+
+    /**
      * Dto로 변환
      *
      * @param problemPosts
@@ -212,6 +221,7 @@ public class ProblemPostService {
                                 .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
     }
+
 
 
 }

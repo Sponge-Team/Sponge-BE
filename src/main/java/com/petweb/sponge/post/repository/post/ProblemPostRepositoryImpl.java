@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.domain.post.ProblemPost;
+import com.petweb.sponge.post.domain.post.QBookmark;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.petweb.sponge.pet.domain.QPet.*;
+import static com.petweb.sponge.post.domain.post.QBookmark.*;
 import static com.petweb.sponge.post.domain.post.QPostCategory.*;
 import static com.petweb.sponge.post.domain.post.QPostImage.*;
 import static com.petweb.sponge.post.domain.post.QPostRecommend.*;
@@ -63,6 +65,11 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
         queryFactory
                 .delete(postRecommend)
                 .where(postRecommend.problemPost.id.eq(problemPostId))
+                .execute();
+        //북마크 삭제
+        queryFactory
+                .delete(bookmark)
+                .where(bookmark.id.eq(problemPostId))
                 .execute();
         //해시태그 삭제
         queryFactory

@@ -2,7 +2,7 @@ package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
-import com.petweb.sponge.post.dto.post.PostRecommendDTO;
+import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.service.ProblemPostService;
@@ -68,16 +68,22 @@ public class ProblemPostController {
     public void removePost(@PathVariable("problemPostId") Long problemPostId) {
         problemPostService.deletePost(problemPostId);
     }
-
-
     /**
      * 추천수 업데이트
-     *
-     * @param postRecommendDto
+     * @param postIdDto
      */
     @PostMapping("/like")
     @UserAuth
-    public void updateLikeCount(@RequestBody PostRecommendDTO postRecommendDto) {
-        problemPostService.updateLikeCount(postRecommendDto.getProblemPostId(), authorizationUtil.getLoginId());
+    public void updateLikeCount(@RequestBody PostIdDTO postIdDto) {
+        problemPostService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
+    }
+
+    /**
+     * 글 북마크 저장
+     * @param postIdDTO
+     */
+    @PostMapping("/bookmark")
+    public void saveBookmark(@RequestBody PostIdDTO postIdDTO) {
+        problemPostService.saveBookmark(postIdDTO);
     }
 }
