@@ -2,6 +2,8 @@ package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.domain.post.ProblemPost;
 import com.petweb.sponge.post.domain.post.QBookmark;
+import com.petweb.sponge.post.domain.post.QProblemPost;
+import com.petweb.sponge.user.domain.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -15,6 +17,7 @@ import static com.petweb.sponge.post.domain.post.QPostImage.*;
 import static com.petweb.sponge.post.domain.post.QPostRecommend.*;
 import static com.petweb.sponge.post.domain.post.QProblemPost.*;
 import static com.petweb.sponge.post.domain.post.QTag.*;
+import static com.petweb.sponge.user.domain.QUser.*;
 
 public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
 
@@ -33,6 +36,15 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
                 .where(problemPost.id.eq(problemPostId))
                 .fetchOne();
 
+    }
+
+    @Override
+    public ProblemPost findPostWithUser(Long problemPostId) {
+        return queryFactory
+                .selectFrom(problemPost)
+                .leftJoin(problemPost.user, user).fetchJoin()
+                .where(problemPost.id.eq(problemPostId))
+                .fetchOne();
     }
 
     @Override

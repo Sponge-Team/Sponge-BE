@@ -8,6 +8,7 @@ import com.petweb.sponge.post.dto.post.PostDetailDTO;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
+import com.petweb.sponge.post.repository.post.BookmarkRepository;
 import com.petweb.sponge.post.repository.post.PostRecommendRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -31,6 +32,7 @@ public class ProblemPostService {
     private final ProblemPostRepository problemPostRepository;
     private final ProblemTypeRepository problemTypeRepository;
     private final PostRecommendRepository postRecommendRepository;
+    private final BookmarkRepository bookmarkRepository;
 
 
     /**
@@ -125,9 +127,7 @@ public class ProblemPostService {
      */
     public void updateLikeCount(Long problemPostId, Long loginId) {
         Optional<PostRecommend> recommend = postRecommendRepository.findRecommend(problemPostId, loginId);
-        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
-        User user = userRepository.findById(loginId).orElseThrow(
-                () -> new NotFoundException("NO Found USER"));
+        ProblemPost problemPost = problemPostRepository.findPostWithUser(problemPostId);
         /**
          * 추천이 이미 있다면 추천을 삭제 추천수 -1
          * 추천이 없다면 추천을 저장 추천수 +1
@@ -138,13 +138,35 @@ public class ProblemPostService {
         } else {
             PostRecommend postRecommend = PostRecommend.builder()
                     .problemPost(problemPost)
-                    .user(user)
+                    .user(problemPost.getUser())
                     .build();
             problemPost.increaseLikeCount();
             postRecommendRepository.save(postRecommend);
         }
     }
 
+    /**
+     * 북마크 업데이트
+     *
+     * @param postIdDTO
+     * @param loginId
+     */
+    public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
+        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
+        ProblemPost problemPost = problemPostRepository.findPostWithUser(postIdDTO.getProblemPostId());
+
+        // 이미 북마크 되어있다면 삭제 아니라면 저장
+        if (bookmark.isPresent()) {
+            bookmarkRepository.delete(bookmark.get());
+        } else {
+            Bookmark buildBookmark = Bookmark.builder()
+                    .problemPost(problemPost)
+                    .user(problemPost.getUser())
+                    .build();
+            bookmarkRepository.save(buildBookmark);
+        }
+
+    }
 
     /**
      * entity로 변환
@@ -194,13 +216,6 @@ public class ProblemPostService {
                 .build();
     }
 
-    /**
-     * 북마크 저장
-     * @param postIdDTO
-     */
-    public void saveBookmark(PostIdDTO postIdDTO) {
-
-    }
 
     /**
      * Dto로 변환
@@ -221,7 +236,6 @@ public class ProblemPostService {
                                 .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
     }
-
 
 
 }
