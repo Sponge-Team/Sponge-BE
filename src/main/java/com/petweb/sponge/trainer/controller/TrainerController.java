@@ -1,5 +1,6 @@
 package com.petweb.sponge.trainer.controller;
 
+import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.trainer.dto.TrainerDTO;
 import com.petweb.sponge.trainer.service.TrainerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -35,6 +36,7 @@ public class TrainerController {
      * @return
      */
     @PostMapping()
+    @TrainerAuth
     public void signup(@RequestBody TrainerDTO trainerDTO) {
         trainerService.saveTrainer(authorizationUtil.getLoginId(),trainerDTO);
     }
@@ -44,8 +46,15 @@ public class TrainerController {
      * @param trainerId
      */
     @DeleteMapping("/{trainerId}")
+    @TrainerAuth
     public void removeTrainer(@PathVariable("trainerId") Long trainerId, HttpServletResponse response) {
+        if (authorizationUtil.getLoginId().equals(trainerId)) {
         trainerService.deleteTrainer(trainerId);
+        }
+        else {
+            //TODO 예외 처리 바꿔주긴 해야함
+            throw new IllegalStateException();
+        }
 
         //로그인 쿠키 삭제
         Cookie cookie = new Cookie("Authorization", null);
