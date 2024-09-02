@@ -1,5 +1,6 @@
 package com.petweb.sponge.user.controller;
 
+import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.user.service.UserService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -36,6 +37,7 @@ public class UserController {
      * @return
      */
     @PostMapping()
+    @UserAuth
     public void signup(@RequestBody UserDTO userDTO) {
          userService.saveUser(authorizationUtil.getLoginId(), userDTO);
 
@@ -47,8 +49,16 @@ public class UserController {
      * @param response
      */
     @DeleteMapping("/{userId}")
+    @UserAuth
     public void removeUser(@PathVariable("userId") Long userId, HttpServletResponse response)  {
+        if (authorizationUtil.getLoginId().equals(userId)){
         userService.deleteUser(userId);
+
+        }
+        else {
+            //TODO 예외 처리 바꿔주긴 해야함
+            throw new IllegalStateException();
+        }
 
         Cookie cookie = new Cookie("Authorization", null);
         cookie.setMaxAge(0);

@@ -79,11 +79,12 @@ public class ProblemPostController {
     }
 
     /**
-     * 글 북마크 저장
+     * 글 북마크 업데이트
      * @param postIdDTO
      */
     @PostMapping("/bookmark")
-    public void saveBookmark(@RequestBody PostIdDTO postIdDTO) {
-        problemPostService.saveBookmark(postIdDTO);
+    @UserAuth
+    public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
+        problemPostService.updateBookmark(postIdDTO,authorizationUtil.getLoginId());
     }
 }

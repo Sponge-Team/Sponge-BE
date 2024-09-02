@@ -8,7 +8,9 @@ public interface ProblemPostRepositoryCustom {
 
 
     ProblemPost findPostWithType(Long problemPostId);
+    ProblemPost findPostWithUser(Long problemPostId);
     List<ProblemPost> findAllPostByProblemCode(Long problemTypeCode);
     void deletePost(Long problemPostId);
+
 
 }
