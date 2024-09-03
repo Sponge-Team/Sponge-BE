@@ -37,14 +37,19 @@ public class ProblemPostController {
 
     /**
      * 카테고리별 글 전체조회
-     * TODO 전체버튼을 클릭하면 어떻게 전체를 조회할지
+     *
      * @param problemTypeCode
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<ProblemPostListDTO>> getAllPost(@RequestParam("problemTypeCode") Long problemTypeCode) {
-        List<ProblemPostListDTO> problemPostList = problemPostService.findPostList(problemTypeCode);
+    public ResponseEntity<List<ProblemPostListDTO>> getAllPost(@RequestParam("problemTypeCode") Long problemTypeCode, @RequestParam("page") int page) {
+        List<ProblemPostListDTO> problemPostList = problemPostService.findPostList(problemTypeCode, page);
         return new ResponseEntity<>(problemPostList, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public void searchPost(@RequestParam String keyword) {
+        problemPostService.searchPost(keyword);
     }
 
     /**
@@ -59,6 +64,18 @@ public class ProblemPostController {
     }
 
     /**
+     * 글 수정
+     *
+     * @param problemPostId
+     * @param problemPostDTO
+     */
+    @PatchMapping("/{problemPostId}")
+    @UserAuth
+    public void updatePost(@PathVariable("problemPostId") Long problemPostId, @RequestBody ProblemPostDTO problemPostDTO) {
+        problemPostService.updatePost(authorizationUtil.getLoginId(), problemPostDTO);
+    }
+
+    /**
      * 글 삭제
      *
      * @param problemPostId
@@ -68,8 +85,10 @@ public class ProblemPostController {
     public void removePost(@PathVariable("problemPostId") Long problemPostId) {
         problemPostService.deletePost(problemPostId);
     }
+
     /**
      * 추천수 업데이트
+     *
      * @param postIdDto
      */
     @PostMapping("/like")
@@ -80,11 +99,12 @@ public class ProblemPostController {
 
     /**
      * 글 북마크 업데이트
+     *
      * @param postIdDTO
      */
     @PostMapping("/bookmark")
     @UserAuth
     public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
-        problemPostService.updateBookmark(postIdDTO,authorizationUtil.getLoginId());
+        problemPostService.updateBookmark(postIdDTO, authorizationUtil.getLoginId());
     }
 }

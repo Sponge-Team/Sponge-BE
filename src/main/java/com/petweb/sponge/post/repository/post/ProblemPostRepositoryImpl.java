@@ -44,13 +44,20 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
                 .where(problemPost.id.eq(problemPostId))
                 .fetchOne();
     }
+    private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
 
     @Override
-    public List<ProblemPost> findAllPostByProblemCode(Long problemTypeCode) {
+    public List<ProblemPost> findAllPostByProblemCode(Long problemTypeCode,int page) {
+        // 페이지 번호와 페이지 크기를 계산
+        int offset = page * PAGE_SIZE;
+        // 카테고리에 해당하는 글 ID 조회
         List<Long> problemPostIds = queryFactory
                 .select(postCategory.problemPost.id)
                 .from(postCategory)
                 .where(postCategory.problemType.code.eq(problemTypeCode))
+                .orderBy(postCategory.problemPost.createdAt.desc())  // 최신순으로 정렬
+                .offset(offset)
+                .limit(PAGE_SIZE)
                 .fetch();
 
         if (problemPostIds.isEmpty()) {
@@ -80,7 +87,7 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
         //북마크 삭제
         queryFactory
                 .delete(bookmark)
-                .where(bookmark.id.eq(problemPostId))
+                .where(bookmark.problemPost.id.eq(problemPostId))
                 .execute();
         //해시태그 삭제
         queryFactory

@@ -58,9 +58,13 @@ public class ProblemPostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProblemPostListDTO> findPostList(Long problemTypeCode) {
-        List<ProblemPost> problemPosts = problemPostRepository.findAllPostByProblemCode(problemTypeCode);
+    public List<ProblemPostListDTO> findPostList(Long problemTypeCode,int page) {
+        List<ProblemPost> problemPosts = problemPostRepository.findAllPostByProblemCode(problemTypeCode,page);
         return toPostListDto(problemPosts);
+
+    }
+
+    public void searchPost(String keyword) {
 
     }
 
@@ -82,7 +86,7 @@ public class ProblemPostService {
         ProblemPost problemPost = toEntity(problemPostDTO, user, pet);
 
         //ProblemType 조회해서 -> PostCategory로 변환 저장
-        problemTypeRepository.findAllByCodeIn(problemPostDTO.getCategoryCodeList())
+        problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
                 .stream().map(problemType -> PostCategory.builder()
                         .problemPost(problemPost)
                         .problemType(problemType)
@@ -109,6 +113,17 @@ public class ProblemPostService {
 
         problemPostRepository.save(problemPost);
 
+    }
+
+    /**
+     * 글 수정
+     * @param loginId
+     * @param problemPostDTO
+     */
+    public void updatePost(Long loginId, ProblemPostDTO problemPostDTO) {
+        //선택한 반려동물 정보 가져오기
+        Pet pet = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
+                NotFoundPet::new);
     }
 
     /**
@@ -259,6 +274,7 @@ public class ProblemPostService {
                                 .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
     }
+
 
 
 }
