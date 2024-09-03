@@ -31,11 +31,9 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
     public ProblemPost findPostWithType(Long problemPostId) {
         return queryFactory
                 .selectFrom(problemPost)
-                .leftJoin(problemPost.pet, pet).fetchJoin()                    // Pet 정보 조인
                 .leftJoin(problemPost.postCategories, postCategory).fetchJoin() // PostCategory 정보 조인
                 .where(problemPost.id.eq(problemPostId))
                 .fetchOne();
-
     }
 
     @Override
@@ -54,6 +52,7 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
                 .from(postCategory)
                 .where(postCategory.problemType.code.eq(problemTypeCode))
                 .fetch();
+
         if (problemPostIds.isEmpty()) {
             return new ArrayList<>();  // 결과가 없으면 빈 리스트 반환
         }

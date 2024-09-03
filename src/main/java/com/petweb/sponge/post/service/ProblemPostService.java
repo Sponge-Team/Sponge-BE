@@ -1,6 +1,9 @@
 package com.petweb.sponge.post.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.petweb.sponge.exception.error.NotFoundPet;
+import com.petweb.sponge.exception.error.NotFoundTrainer;
+import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.post.*;
@@ -71,10 +74,10 @@ public class ProblemPostService {
     public void savePost(Long loginId, ProblemPostDTO problemPostDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
-                () -> new NotFoundException("NO Found USER"));
+                NotFoundUser::new);
         //선택한 반려동물 정보 가져오기
         Pet pet = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
-                () -> new NotFoundException("NO Found Pet"));
+                NotFoundPet::new);
 
         ProblemPost problemPost = toEntity(problemPostDTO, user, pet);
 
@@ -194,26 +197,46 @@ public class ProblemPostService {
      */
     private PostDetailDTO toDetailDto(ProblemPost problemPost) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        return PostDetailDTO.builder()
-                .userId(problemPost.getUser().getId())
-                .problemPostId(problemPost.getId())
-                .title(problemPost.getTitle())
-                .content(problemPost.getContent())
-                .duration(problemPost.getDuration())
-                .likeCount(problemPost.getLikeCount())
-                .petName(problemPost.getPet().getName())
-                .breed(problemPost.getPet().getBreed())
-                .gender(problemPost.getPet().getGender())
-                .age(problemPost.getPet().getAge())
-                .weight(problemPost.getPet().getWeight())
-                .createdAt(formatter.format(problemPost.getCreatedAt()))
-                .problemTypeList(problemPost.getPostCategories().stream()
-                        .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
-                .hasTagList(problemPost.getTags().stream()
-                        .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
-                .imageUrlList(problemPost.getPostImages().stream()
-                        .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
-                .build();
+        Optional<Pet> pet = petRepository.findById(problemPost.getPet().getId());
+        if (pet.isPresent()) {
+            return PostDetailDTO.builder()
+                    .userId(problemPost.getUser().getId())
+                    .problemPostId(problemPost.getId())
+                    .title(problemPost.getTitle())
+                    .content(problemPost.getContent())
+                    .duration(problemPost.getDuration())
+                    .likeCount(problemPost.getLikeCount())
+                    .petName(problemPost.getPet().getName())
+                    .breed(problemPost.getPet().getBreed())
+                    .gender(problemPost.getPet().getGender())
+                    .age(problemPost.getPet().getAge())
+                    .weight(problemPost.getPet().getWeight())
+                    .createdAt(formatter.format(problemPost.getCreatedAt()))
+                    .problemTypeList(problemPost.getPostCategories().stream()
+                            .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+                    .hasTagList(problemPost.getTags().stream()
+                            .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
+                    .imageUrlList(problemPost.getPostImages().stream()
+                            .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
+                    .build();
+        } else {
+            return PostDetailDTO.builder()
+                    .userId(problemPost.getUser().getId())
+                    .problemPostId(problemPost.getId())
+                    .title(problemPost.getTitle())
+                    .content(problemPost.getContent())
+                    .duration(problemPost.getDuration())
+                    .likeCount(problemPost.getLikeCount())
+                    .createdAt(formatter.format(problemPost.getCreatedAt()))
+                    .problemTypeList(problemPost.getPostCategories().stream()
+                            .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+                    .hasTagList(problemPost.getTags().stream()
+                            .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
+                    .imageUrlList(problemPost.getPostImages().stream()
+                            .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
+                    .build();
+
+        }
     }
 
 

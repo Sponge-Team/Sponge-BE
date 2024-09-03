@@ -84,10 +84,9 @@ public class JwtFilter extends OncePerRequestFilter {
             response.addCookie(newToken);
             response.addCookie(loginType);
 
-
             //자동 로그아웃되면 다시 로그인할 경로 재설정
+            // TODO 경로 체크 필요
             response.sendRedirect("/login");
-
             return;
         }
 

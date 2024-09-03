@@ -1,9 +1,8 @@
 package com.petweb.sponge.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petweb.sponge.trainer.dto.AddressDTO;
-import com.petweb.sponge.user.dto.UserDTO;
+import com.petweb.sponge.user.dto.UserDetailDTO;
 import com.petweb.sponge.user.service.UserService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.Gender;
@@ -37,11 +36,11 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    private UserDTO userDTO;
+    private UserDetailDTO userDetailDTO;
 
     @BeforeEach
     public void setUp() {
-        userDTO = UserDTO.builder()
+        userDetailDTO = UserDetailDTO.builder()
                 .name("김유저")
                 .gender(Gender.NEUTERED_FEMALE.getCode())
                 .phone("010-1111-1111")
@@ -63,13 +62,13 @@ class UserControllerTest {
     @WithMockUser
     void getUser() throws Exception {
         // Given
-        given(userService.findUser(anyLong())).willReturn(userDTO);
+        given(userService.findUser(anyLong())).willReturn(userDetailDTO);
 
         // When // Then
         mockMvc.perform(get("/api/user/{userId}",1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
+                .andExpect(content().json(objectMapper.writeValueAsString(userDetailDTO)));
     }
 
     @Test
@@ -78,12 +77,12 @@ class UserControllerTest {
     void signup() throws Exception {
         // Given
         given(authorizationUtil.getLoginId()).willReturn(1L);
-        willDoNothing().given(userService).saveUser(anyLong(),any(UserDTO.class));
+        willDoNothing().given(userService).saveUser(anyLong(),any(UserDetailDTO.class));
 
         // When // Then
         mockMvc.perform(post("/api/user").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .content(objectMapper.writeValueAsString(userDetailDTO)))
                 .andExpect(status().isOk());
     }
 }

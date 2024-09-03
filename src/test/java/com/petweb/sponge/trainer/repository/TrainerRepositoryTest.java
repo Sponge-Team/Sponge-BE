@@ -5,8 +5,7 @@ import com.petweb.sponge.TestConfig;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
-import com.petweb.sponge.trainer.dto.TrainerDTO;
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.trainer.dto.TrainerDetailDTO;
 import com.petweb.sponge.utils.Gender;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +33,7 @@ class TrainerRepositoryTest {
     @BeforeEach
     void setup() {
         Trainer trainer = new Trainer("test", "test");
-        TrainerDTO trainerDTO = TrainerDTO.builder()
+        TrainerDetailDTO trainerDetailDTO = TrainerDetailDTO.builder()
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")
@@ -61,7 +59,7 @@ class TrainerRepositoryTest {
                                 .build()
                 ))
                 .build();
-        trainer.settingTrainer(trainerDTO);
+        trainer.settingTrainer(trainerDetailDTO);
         trainerRepository.save(trainer);
         em.flush();
         em.clear();

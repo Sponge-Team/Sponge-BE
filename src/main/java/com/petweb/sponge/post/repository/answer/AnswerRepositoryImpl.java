@@ -28,7 +28,6 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
     public List<Answer> findAllAnswerWithTrainer(Long problemPostId) {
         List<Answer> answerList = queryFactory
                 .selectFrom(answer)
-                .leftJoin(answer.trainer, trainer).fetchJoin()
                 .leftJoin(answer.problemPost,problemPost).fetchJoin()
                 .leftJoin(answer.adoptAnswer, adoptAnswer).fetchJoin()
                 .where(answer.problemPost.id.eq(problemPostId))
@@ -43,6 +42,7 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
     public Answer findAnswer(Long answerId) {
         return queryFactory
                 .selectFrom(answer)
+                //TODO 훈련사 데이터가 없을 시 문제가 생김
                 .leftJoin(answer.trainer,trainer).fetchJoin()
                 .leftJoin(answer.problemPost,problemPost).fetchJoin()
                 .where(answer.id.eq(answerId))

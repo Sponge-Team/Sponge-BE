@@ -1,15 +1,13 @@
 package com.petweb.sponge.auth;
 
+import com.petweb.sponge.exception.error.LoginTypeError;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.LoginType;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-
-import javax.naming.AuthenticationException;
 
 @Aspect
 @RequiredArgsConstructor
@@ -25,8 +23,7 @@ public class AuthCheckAspect {
             return joinPoint.proceed();
         }
         else {
-            //TODO 예외 바꿔주긴 해야함
-            throw new AuthenticationException();
+            throw new LoginTypeError();
         }
     }
 
@@ -37,8 +34,7 @@ public class AuthCheckAspect {
             return joinPoint.proceed();
         }
         else {
-            //TODO 예외 바꿔주긴 해야함
-            throw new AuthenticationException();
+            throw new LoginTypeError();
         }
     }
 }

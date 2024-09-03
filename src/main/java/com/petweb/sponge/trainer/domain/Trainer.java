@@ -2,7 +2,7 @@ package com.petweb.sponge.trainer.domain;
 
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
-import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.dto.TrainerDetailDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class Trainer {
     private Long id;
     private String email; //로그인 아이디
     private String name; //이름
-    private int gender; //성별
+    private int gender = 1; //성별
     private String phone; //핸드폰 번호
     private String profileImgUrl; //프로필 이미지 링크
     private String content; //자기소개
@@ -41,33 +41,37 @@ public class Trainer {
     @LastModifiedDate
     private Timestamp modifiedAt;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<History> histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TrainerAddress> trainerAddresses = new ArrayList<>();
 
     public void increaseAdoptCount() {
         this.adopt_count++;
     }
+
     public void decreaseAdoptCount() {
         this.adopt_count--;
     }
+
     @Builder
     public Trainer(String email, String name) {
         this.email = email;
         this.name = name;
     }
 
-    //==생성 메서드==//
-    public Trainer settingTrainer(TrainerDTO trainerDTO) {
-        this.name = trainerDTO.getName();
-        this.gender = trainerDTO.getGender();
-        this.phone = trainerDTO.getPhone();
-        this.profileImgUrl = trainerDTO.getProfileImgUrl();
-        this.content = trainerDTO.getContent();
-        this.years = trainerDTO.getYears();
-        List<HistoryDTO> historyList = trainerDTO.getHistoryList();
+    //==생성, 수정 메서드==//
+    public Trainer settingTrainer(TrainerDetailDTO trainerDetailDTO) {
+        this.name = trainerDetailDTO.getName();
+        this.gender = trainerDetailDTO.getGender();
+        this.phone = trainerDetailDTO.getPhone();
+        this.profileImgUrl = trainerDetailDTO.getProfileImgUrl();
+        this.content = trainerDetailDTO.getContent();
+        this.years = trainerDetailDTO.getYears();
+        List<HistoryDTO> historyList = trainerDetailDTO.getHistoryList();
+        getHistories().clear();
+        getTrainerAddresses().clear();
         //경력 정보 저장
         for (HistoryDTO historyDTO : historyList) {
             History history = History.builder()
@@ -80,7 +84,7 @@ public class Trainer {
             getHistories().add(history);
         }
         //활동지역 정보 저장
-        List<AddressDTO> addressList = trainerDTO.getAddressList();
+        List<AddressDTO> addressList = trainerDetailDTO.getAddressList();
         for (AddressDTO addressDTO : addressList) {
             TrainerAddress trainerAddress = TrainerAddress.builder()
                     .city(addressDTO.getCity())

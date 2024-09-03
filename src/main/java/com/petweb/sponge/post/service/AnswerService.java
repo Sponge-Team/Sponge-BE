@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.petweb.sponge.exception.error.*;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.domain.answer.AnswerRecommend;
@@ -62,9 +63,9 @@ public class AnswerService {
     @Transactional
     public void saveAnswer(Long loginId, AnswerDTO answerDTO) {
         ProblemPost problemPost = problemPostRepository.findById(answerDTO.getProblemPostId()).orElseThrow(
-                () -> new NotFoundException("NO Found Post"));
+                NotFoundPost::new);
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-                () -> new NotFoundException("NO Found Trainer"));
+                NotFoundTrainer::new);
         Answer answer = Answer.builder()
                 .content(answerDTO.getContent())
                 .problemPost(problemPost)
@@ -83,7 +84,7 @@ public class AnswerService {
     @Transactional
     public void updateAnswer(Long answerId, AnswerUpdateDTO answerUpdateDTO) {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new NotFoundException("NO Found Answer"));
+                NotFoundAnswer::new);
         answer.setContent(answerUpdateDTO.getContent());
     }
 
@@ -117,11 +118,10 @@ public class AnswerService {
     public void saveAdoptAnswer(AdoptAnswerDTO adoptAnswerDTO, Long loginId) {
         Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId());
         User user = userRepository.findById(loginId).orElseThrow(
-                () -> new NotFoundException("NO Found USER"));
+                NotFoundUser::new);
         // 글을쓴 유저인지 아닌지 체크
         if (!answer.getProblemPost().getUser().getId().equals(user.getId())) {
-            // TODO 예외 바꿔주긴 해야함
-            throw new IllegalStateException();
+            throw new LoginIdError();
         }
 
         AdoptAnswer adoptAnswer = AdoptAnswer.builder()
@@ -145,7 +145,7 @@ public class AnswerService {
         Optional<AnswerRecommend> recommend = answerRecommendRepository.findRecommend(answerId, loginId);
         Answer answer = answerRepository.findAnswer(answerId);
         User user = userRepository.findById(loginId).orElseThrow(
-                () -> new NotFoundException("NO Found USER"));
+                NotFoundUser::new);
 
         /**
          * 추천이 이미 있다면 추천을 삭제 추천수 -1
@@ -172,8 +172,10 @@ public class AnswerService {
      */
     private List<AnswerDetailDTO> toDetailDto(List<Answer> answerList) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
         return answerList.stream().map(answer ->
         {
+
             AdoptAnswer adoptAnswer = answer.getAdoptAnswer();
             // 채택되면 true 안되있으면 false
             boolean adoptCheck = adoptAnswer != null;
@@ -184,18 +186,34 @@ public class AnswerService {
                 Long userId = answer.getProblemPost().getUser().getId();
                 postWriter = authorizationUtil.getLoginId().equals(userId);
             }
-            return AnswerDetailDTO.builder()
-                    .answerId(answer.getId())
-                    .trainerId(answer.getTrainer().getId())
-                    .trainerName(answer.getTrainer().getName())
-                    .adopt_count(answer.getTrainer().getAdopt_count())
-                    .chat_count(answer.getTrainer().getChat_count())
-                    .content(answer.getContent())
-                    .likeCount(answer.getLikeCount())
-                    .adoptCheck(adoptCheck)
-                    .postWriter(postWriter)
-                    .createdAt(formatter.format(answer.getCreatedAt()))
-                    .build();
+            Optional<Trainer> trainer = trainerRepository.findById(answer.getTrainer().getId());
+            if (trainer.isPresent()) {
+                //훈련사의 정보가 있다면
+                return AnswerDetailDTO.builder()
+                        .answerId(answer.getId())
+                        .trainerId(answer.getTrainer().getId())
+                        .trainerName(answer.getTrainer().getName())
+                        .adopt_count(answer.getTrainer().getAdopt_count())
+                        .chat_count(answer.getTrainer().getChat_count())
+                        .content(answer.getContent())
+                        .likeCount(answer.getLikeCount())
+                        .adoptCheck(adoptCheck)
+                        .postWriter(postWriter)
+                        .createdAt(formatter.format(answer.getCreatedAt()))
+                        .build();
+            }
+            else {
+                //훈련사가 탈퇴했다면
+                return AnswerDetailDTO.builder()
+                        .answerId(answer.getId())
+                        .content(answer.getContent())
+                        .likeCount(answer.getLikeCount())
+                        .adoptCheck(adoptCheck)
+                        .postWriter(postWriter)
+                        .createdAt(formatter.format(answer.getCreatedAt()))
+                        .build();
+            }
+
         }).collect(Collectors.toList());
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class UserDTO {
+public class UserDetailDTO {
 
     private Long userId;
     private String name;

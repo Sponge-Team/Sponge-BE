@@ -1,7 +1,7 @@
 package com.petweb.sponge.user.domain;
 
 import com.petweb.sponge.trainer.dto.AddressDTO;
-import com.petweb.sponge.user.dto.UserDTO;
+import com.petweb.sponge.user.dto.UserDetailDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,11 +27,11 @@ public class User {
     private Long id;
     private String email; //로그인 아이디
     private String name; //이름
-    private int gender; //성별
+    private int gender = 1; //성별
     private String phone; //핸드폰 번호
     private String profileImgUrl; //프로필 이미지 링크
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<UserAddress> userAddresses = new ArrayList<>();
 
     @CreatedDate
@@ -45,14 +45,15 @@ public class User {
         this.name = name;
     }
 
-    //==생성 메서드==//
-    public User settingUser(UserDTO userDTO) {
-        this.name = userDTO.getName();
-        this.gender = userDTO.getGender();
-        this.phone = userDTO.getPhone();
-        this.profileImgUrl = userDTO.getProfileImgUrl();
-        List<AddressDTO> addressList = userDTO.getAddressList();
-
+    //==생성, 수정 메서드==//
+    public User settingUser(UserDetailDTO userDetailDTO) {
+        this.name = userDetailDTO.getName();
+        this.gender = userDetailDTO.getGender();
+        this.phone = userDetailDTO.getPhone();
+        this.profileImgUrl = userDetailDTO.getProfileImgUrl();
+        List<AddressDTO> addressList = userDetailDTO.getAddressList();
+        //정보 초기화
+        getUserAddresses().clear();
         //유저 지역 저장
         for (AddressDTO addressDTO : addressList) {
             UserAddress userAddress = UserAddress.builder()

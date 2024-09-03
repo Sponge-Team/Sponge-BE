@@ -4,10 +4,9 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.TestConfig;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.dto.UserDTO;
+import com.petweb.sponge.user.dto.UserDetailDTO;
 import com.petweb.sponge.utils.Gender;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(TestConfig.class)
@@ -37,7 +34,7 @@ class UserRepositoryTest {
                 .email("test")
                 .name("test")
                 .build();
-        UserDTO userDTO = UserDTO
+        UserDetailDTO userDetailDTO = UserDetailDTO
                 .builder()
                 .name("김유저")
                 .gender(Gender.FEMALE.getCode())
@@ -54,7 +51,7 @@ class UserRepositoryTest {
                                 .build()
                 ))
                 .build();
-        user.settingUser(userDTO);
+        user.settingUser(userDetailDTO);
         userRepository.save(user);
         em.flush();
         em.clear();

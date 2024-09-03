@@ -3,7 +3,7 @@ package com.petweb.sponge.trainer.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
-import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.dto.TrainerDetailDTO;
 import com.petweb.sponge.trainer.service.TrainerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.Gender;
@@ -39,11 +39,11 @@ class TrainerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private TrainerDTO trainerDTO;
+    private TrainerDetailDTO trainerDetailDTO;
 
     @BeforeEach
     public void setUp() {
-        trainerDTO = TrainerDTO.builder()
+        trainerDetailDTO = TrainerDetailDTO.builder()
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")
@@ -75,13 +75,13 @@ class TrainerControllerTest {
     @WithMockUser
     void getTrainer() throws Exception {
         // Given
-        given(trainerService.findTrainer(anyLong())).willReturn(trainerDTO);
+        given(trainerService.findTrainer(anyLong())).willReturn(trainerDetailDTO);
 
         // When // Then
         mockMvc.perform(get("/api/trainer/{trainerId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(trainerDTO)));
+                .andExpect(content().json(objectMapper.writeValueAsString(trainerDetailDTO)));
     }
 
     @Test
@@ -90,11 +90,11 @@ class TrainerControllerTest {
     void signup() throws Exception {
         // Given
         given(authorizationUtil.getLoginId()).willReturn(1L);
-        willDoNothing().given(trainerService).saveTrainer(anyLong(),any(TrainerDTO.class));
+        willDoNothing().given(trainerService).saveTrainer(anyLong(),any(TrainerDetailDTO.class));
         // When // Then
         mockMvc.perform(post("/api/trainer").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(trainerDTO)))
+                        .content(objectMapper.writeValueAsString(trainerDetailDTO)))
                 .andExpect(status().isOk());
     }
 

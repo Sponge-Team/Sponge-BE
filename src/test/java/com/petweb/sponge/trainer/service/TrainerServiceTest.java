@@ -3,7 +3,7 @@ package com.petweb.sponge.trainer.service;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.trainer.dto.HistoryDTO;
-import com.petweb.sponge.trainer.dto.TrainerDTO;
+import com.petweb.sponge.trainer.dto.TrainerDetailDTO;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class TrainerServiceTest {
     private TrainerRepository trainerRepository;
 
     private Trainer findTrainer;
-    private TrainerDTO trainerDTO;
+    private TrainerDetailDTO trainerDetailDTO;
     private Trainer trainer;
     private Long loginId=1L;
 
@@ -41,7 +41,7 @@ class TrainerServiceTest {
     void setUp() {
         findTrainer = new Trainer("test","test");
         ReflectionTestUtils.setField(findTrainer, "id", 1L);
-        trainerDTO = TrainerDTO.builder()
+        trainerDetailDTO = TrainerDetailDTO.builder()
                 .name("강훈련사")
                 .gender(Gender.MALE.getCode())
                 .phone("010-0000-0000")
@@ -67,7 +67,7 @@ class TrainerServiceTest {
                                 .build()
                 ))
                 .build();
-        trainer = findTrainer.settingTrainer(trainerDTO);
+        trainer = findTrainer.settingTrainer(trainerDetailDTO);
 
     }
 
@@ -78,7 +78,7 @@ class TrainerServiceTest {
         given(trainerRepository.findTrainerWithAddress(anyLong())).willReturn(Optional.of(trainer));
 
         // When
-        TrainerDTO findTrainer = trainerService.findTrainer(1L);
+        TrainerDetailDTO findTrainer = trainerService.findTrainer(1L);
 
         // Then
         assertThat(findTrainer).isNotNull();
@@ -93,7 +93,7 @@ class TrainerServiceTest {
         given(trainerRepository.save(any(Trainer.class))).willReturn(trainer);
 
         // When
-        trainerService.saveTrainer(loginId, trainerDTO);
+        trainerService.saveTrainer(loginId, trainerDetailDTO);
 
         // Then
         assertEquals(loginId, trainer.getId());
@@ -107,7 +107,7 @@ class TrainerServiceTest {
 
         // When // Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            trainerService.saveTrainer(loginId, trainerDTO);
+            trainerService.saveTrainer(loginId, trainerDetailDTO);
         });
 
         assertEquals("NO Found Trainer", exception.getMessage());

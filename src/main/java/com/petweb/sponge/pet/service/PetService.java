@@ -1,6 +1,7 @@
 package com.petweb.sponge.pet.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.pet.repository.PetRepository;
@@ -27,8 +28,7 @@ public class PetService {
     @Transactional(readOnly = true)
     public PetDTO findPet(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(
-                () -> new NotFoundException("NO Found Pet"));
-
+                NotFoundPet::new);
         return toDto(pet);
     }
 
