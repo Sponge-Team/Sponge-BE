@@ -43,6 +43,8 @@ public class UserService {
         // user,address 한번에 조회
         User user = userRepository.findUserWithAddress(loginId).orElseThrow(
                 NotFoundUser::new);
+
+
         return toDto(user);
     }
 
@@ -73,6 +75,8 @@ public class UserService {
     public void updateUser(Long userId, UserDetailDTO userDetailDTO) {
         User user = userRepository.findById(userId).orElseThrow(
                 NotFoundUser::new);
+        //초기화
+        userRepository.initUser(userId);
         user.settingUser(userDetailDTO);
     }
 

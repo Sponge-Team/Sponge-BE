@@ -20,6 +20,6 @@ public class NotFoundExceptionHandler {
 
     @ExceptionHandler({NotFoundPet.class, NotFoundAnswer.class, NotFoundPost.class})
     public ResponseEntity<ResponseError> handleNotFoundEntityException() {
-        return new ResponseEntity<>(new ResponseError(NOT_FOUND_ENTITY.getCode(), NOT_FOUND_ENTITY.getMessage()), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ResponseError(NOT_FOUND_ENTITY.getCode(), NOT_FOUND_ENTITY.getMessage()), HttpStatus.NOT_FOUND);
     }
 }

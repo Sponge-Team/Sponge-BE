@@ -79,6 +79,7 @@ public class TrainerService {
     public void updateTrainer(Long trainerId, TrainerDetailDTO trainerDetailDTO) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
                 NotFoundTrainer::new);
+        trainerRepository.initTrainer(trainerId);
         //trainer 정보 수정
         trainer.settingTrainer(trainerDetailDTO);
     }

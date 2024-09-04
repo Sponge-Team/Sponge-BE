@@ -31,7 +31,7 @@ public class User {
     private String phone; //핸드폰 번호
     private String profileImgUrl; //프로필 이미지 링크
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserAddress> userAddresses = new ArrayList<>();
 
     @CreatedDate
@@ -52,8 +52,6 @@ public class User {
         this.phone = userDetailDTO.getPhone();
         this.profileImgUrl = userDetailDTO.getProfileImgUrl();
         List<AddressDTO> addressList = userDetailDTO.getAddressList();
-        //정보 초기화
-        getUserAddresses().clear();
         //유저 지역 저장
         for (AddressDTO addressDTO : addressList) {
             UserAddress userAddress = UserAddress.builder()

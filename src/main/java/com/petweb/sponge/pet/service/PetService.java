@@ -67,7 +67,7 @@ public class PetService {
     }
 
     /**
-     * 펫 정보 삭제 (FK관련해서 삭제할 시 수정 필요)
+     * 펫 정보 삭제
      * @param petId
      */
     @Transactional

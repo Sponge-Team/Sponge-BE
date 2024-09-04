@@ -8,4 +8,5 @@ public interface UserRepositoryCustom {
 
     Optional<User> findUserWithAddress(Long userId);
     void deleteUser(Long userId);
+    void initUser(Long userId);
 }

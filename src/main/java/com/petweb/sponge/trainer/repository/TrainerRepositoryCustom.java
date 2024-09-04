@@ -8,4 +8,5 @@ public interface TrainerRepositoryCustom {
 
     Optional<Trainer> findTrainerWithAddress(Long trainerId);
     void deleteTrainer(Long trainerId);
+    void initTrainer(Long trainerId);
 }

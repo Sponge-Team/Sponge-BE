@@ -12,6 +12,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
   #registration
   security:
     oauth2:

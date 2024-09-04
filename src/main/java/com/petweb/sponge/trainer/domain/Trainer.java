@@ -42,10 +42,10 @@ public class Trainer {
     @LastModifiedDate
     private Timestamp modifiedAt;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<History> histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<TrainerAddress> trainerAddresses = new ArrayList<>();
 
     public void increaseAdoptCount() {
@@ -70,9 +70,6 @@ public class Trainer {
         this.profileImgUrl = trainerDetailDTO.getProfileImgUrl();
         this.content = trainerDetailDTO.getContent();
         this.years = trainerDetailDTO.getYears();
-        getHistories().clear();
-        getTrainerAddresses().clear();
-
         //경력 정보 저장
         List<HistoryDTO> historyList = trainerDetailDTO.getHistoryList();
         for (HistoryDTO historyDTO : historyList) {

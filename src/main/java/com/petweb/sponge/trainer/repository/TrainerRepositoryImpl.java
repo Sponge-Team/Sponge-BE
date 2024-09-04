@@ -45,4 +45,16 @@ public class TrainerRepositoryImpl implements TrainerRepositoryCustom {
                 .where(trainer.id.eq(trainerId))
                 .execute();
     }
+
+    @Override
+    public void initTrainer(Long trainerId) {
+        queryFactory
+                .delete(history)
+                .where(history.trainer.id.eq(trainerId))
+                .execute();
+        queryFactory
+                .delete(trainerAddress)
+                .where(trainerAddress.trainer.id.eq(trainerId))
+                .execute();
+    }
 }

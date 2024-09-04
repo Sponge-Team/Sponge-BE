@@ -2,18 +2,15 @@ package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.domain.post.PostCategory;
 import com.petweb.sponge.post.domain.post.ProblemPost;
-import com.petweb.sponge.post.domain.post.QBookmark;
-import com.petweb.sponge.post.domain.post.QProblemPost;
-import com.petweb.sponge.user.domain.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.petweb.sponge.pet.domain.QPet.*;
 import static com.petweb.sponge.post.domain.post.QBookmark.*;
 import static com.petweb.sponge.post.domain.post.QPostCategory.*;
 import static com.petweb.sponge.post.domain.post.QPostImage.*;
@@ -31,21 +28,21 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
     }
 
     @Override
-    public ProblemPost findPostWithType(Long problemPostId) {
-        return queryFactory
-                .selectFrom(problemPost)
-                .leftJoin(problemPost.postCategories, postCategory).fetchJoin() // PostCategory 정보 조인
-                .where(problemPost.id.eq(problemPostId))
-                .fetchOne();
+    public Optional<ProblemPost> findPostWithType(Long problemPostId) {
+         return Optional.ofNullable(queryFactory
+                 .selectFrom(problemPost)
+                 .leftJoin(problemPost.postCategories, postCategory).fetchJoin() // PostCategory 정보 조인
+                 .where(problemPost.id.eq(problemPostId))
+                 .fetchOne());
     }
 
     @Override
-    public ProblemPost findPostWithUser(Long problemPostId) {
-        return queryFactory
-                .selectFrom(problemPost)
-                .leftJoin(problemPost.user, user).fetchJoin()
-                .where(problemPost.id.eq(problemPostId))
-                .fetchOne();
+    public Optional<ProblemPost> findPostWithUser(Long problemPostId) {
+         return Optional.ofNullable(queryFactory
+                 .selectFrom(problemPost)
+                 .leftJoin(problemPost.user, user).fetchJoin()
+                 .where(problemPost.id.eq(problemPostId))
+                 .fetchOne());
     }
 
     private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
@@ -148,6 +145,25 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
         queryFactory
                 .delete(problemPost)
                 .where(problemPost.id.eq(problemPostId))
+                .execute();
+    }
+
+    @Override
+    public void initProblemPost(Long problemPostId) {
+        //카테고리별 글 삭제
+        queryFactory
+                .delete(postCategory)
+                .where(postCategory.problemPost.id.eq(problemPostId))
+                .execute();
+        //해시태그 삭제
+        queryFactory
+                .delete(tag)
+                .where(tag.problemPost.id.eq(problemPostId))
+                .execute();
+        //이미지 삭제
+        queryFactory
+                .delete(postImage)
+                .where(postImage.problemPost.id.eq(problemPostId))
                 .execute();
     }
 }

@@ -1,6 +1,8 @@
 package com.petweb.sponge.post.service;
 
+import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
+import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
@@ -38,14 +40,14 @@ public class ProblemPostService {
 
     /**
      * 글 단건 조회
-     * TODO ToOne관계 다수 조회 최적화 필요
      *
      * @param problemPostId
      * @return
      */
     @Transactional(readOnly = true)
     public PostDetailDTO findPost(Long problemPostId) {
-        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId);
+        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
+                NotFoundPost::new);;
         return toDetailDto(problemPost);
     }
 
@@ -123,22 +125,51 @@ public class ProblemPostService {
 
     /**
      * 글 수정
+     *
      * @param loginId
+     * @param problemPostId
      * @param problemPostDTO
      */
-    public void updatePost(Long loginId, ProblemPostDTO problemPostDTO) {
-        //선택한 반려동물 정보 가져오기
-        Pet pet = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
-                NotFoundPet::new);
+    @Transactional
+    public void updatePost(Long loginId, Long problemPostId, ProblemPostDTO problemPostDTO) {
+        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
+                NotFoundPost::new);
+        // 글을 쓴 유저가 아닌경우
+        if (!problemPost.getUser().getId().equals(loginId)) {
+            throw new LoginIdError();
+        }
+        //글 초기화
+        problemPostRepository.initProblemPost(problemPostId);
+
+        problemPost.updatePost(problemPostDTO.getTitle()
+                ,problemPostDTO.getContent()
+                ,problemPostDTO.getImageUrlList()
+                ,problemPostDTO.getHasTagList());
+
+        //ProblemType 조회해서 -> PostCategory로 변환 저장
+        problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
+                .stream().map(problemType -> PostCategory.builder()
+                        .problemPost(problemPost)
+                        .problemType(problemType)
+                        .build()).collect(Collectors.toList())
+                .forEach(postCategory -> problemPost.getPostCategories().add(postCategory));
     }
+
 
     /**
      * 글 삭제
      *
+     * @param loginId
      * @param problemPostId
      */
     @Transactional
-    public void deletePost(Long problemPostId) {
+    public void deletePost(Long loginId, Long problemPostId) {
+        ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
+                NotFoundPost::new);;
+        // 글을 쓴 유저가 아닌경우
+        if (!problemPost.getUser().getId().equals(loginId)) {
+            throw new LoginIdError();
+        }
         problemPostRepository.deletePost(problemPostId);
     }
 
@@ -151,7 +182,8 @@ public class ProblemPostService {
      */
     public void updateLikeCount(Long problemPostId, Long loginId) {
         Optional<PostRecommend> recommend = postRecommendRepository.findRecommend(problemPostId, loginId);
-        ProblemPost problemPost = problemPostRepository.findPostWithUser(problemPostId);
+        ProblemPost problemPost = problemPostRepository.findPostWithUser(problemPostId).orElseThrow(
+                NotFoundPost::new);;
         /**
          * 추천이 이미 있다면 추천을 삭제 추천수 -1
          * 추천이 없다면 추천을 저장 추천수 +1
@@ -177,7 +209,8 @@ public class ProblemPostService {
      */
     public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
         Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
-        ProblemPost problemPost = problemPostRepository.findPostWithUser(postIdDTO.getProblemPostId());
+        ProblemPost problemPost = problemPostRepository.findPostWithUser(postIdDTO.getProblemPostId()).orElseThrow(
+                NotFoundPost::new);;
 
         // 이미 북마크 되어있다면 삭제 아니라면 저장
         if (bookmark.isPresent()) {

@@ -79,7 +79,7 @@ public class ProblemPostController {
     @PatchMapping("/{problemPostId}")
     @UserAuth
     public void updatePost(@PathVariable("problemPostId") Long problemPostId, @RequestBody ProblemPostDTO problemPostDTO) {
-        problemPostService.updatePost(authorizationUtil.getLoginId(), problemPostDTO);
+        problemPostService.updatePost(authorizationUtil.getLoginId(),problemPostId,problemPostDTO);
     }
 
     /**
@@ -90,7 +90,7 @@ public class ProblemPostController {
     @DeleteMapping("/{problemPostId}")
     @UserAuth
     public void removePost(@PathVariable("problemPostId") Long problemPostId) {
-        problemPostService.deletePost(problemPostId);
+        problemPostService.deletePost(authorizationUtil.getLoginId(),problemPostId);
     }
 
     /**

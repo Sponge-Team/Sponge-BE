@@ -97,6 +97,7 @@ public class AnswerService {
     @Transactional
     public void deleteAnswer(Long answerId, Long loginId) {
         Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findAdoptAnswer(answerId, loginId);
+        Answer answer = answerRepository.findAnswer(answerId);
         /**
          * 답변과 관련하여 채택이 있다면 채택과 같이 답변삭제, 채택수 -1
          * 답변과 관련하여 채택이 없다면 채택만 삭제, 채택수는 그대로
@@ -104,6 +105,7 @@ public class AnswerService {
         if (adoptAnswer.isPresent()) {
             Trainer trainer = adoptAnswer.get().getTrainer();
             trainer.decreaseAdoptCount();
+            answer.getProblemPost().decreaseAnswerCount();
         }
         answerRepository.deleteAnswer(answerId, loginId);
     }

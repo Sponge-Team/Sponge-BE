@@ -44,4 +44,12 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .where(user.id.eq(userId))
                 .execute();
     }
+
+    @Override
+    public void initUser(Long userId) {
+        queryFactory
+                .delete(userAddress)
+                .where(userAddress.user.id.eq(userId))
+                .execute();
+    }
 }
