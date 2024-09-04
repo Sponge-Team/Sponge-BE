@@ -1,8 +1,6 @@
 package com.petweb.sponge.post.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.exception.error.NotFoundPet;
-import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
@@ -64,8 +62,16 @@ public class ProblemPostService {
 
     }
 
-    public void searchPost(String keyword) {
-
+    /**
+     * 검색
+     * @param keyword
+     * @param page
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<ProblemPostListDTO> searchPost(String keyword, int page) {
+        List<ProblemPost> problemPosts = problemPostRepository.searchPostByKeyword(keyword,page);
+        return toPostListDto(problemPosts);
     }
 
     /**

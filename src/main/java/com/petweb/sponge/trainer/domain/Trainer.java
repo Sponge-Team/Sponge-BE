@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -69,10 +70,11 @@ public class Trainer {
         this.profileImgUrl = trainerDetailDTO.getProfileImgUrl();
         this.content = trainerDetailDTO.getContent();
         this.years = trainerDetailDTO.getYears();
-        List<HistoryDTO> historyList = trainerDetailDTO.getHistoryList();
         getHistories().clear();
         getTrainerAddresses().clear();
+
         //경력 정보 저장
+        List<HistoryDTO> historyList = trainerDetailDTO.getHistoryList();
         for (HistoryDTO historyDTO : historyList) {
             History history = History.builder()
                     .title(historyDTO.getTitle())
