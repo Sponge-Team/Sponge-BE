@@ -97,7 +97,8 @@ public class AnswerService {
     @Transactional
     public void deleteAnswer(Long answerId, Long loginId) {
         Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findAdoptAnswer(answerId, loginId);
-        Answer answer = answerRepository.findAnswer(answerId);
+        Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
+                NotFoundAnswer::new);
         /**
          * 답변과 관련하여 채택이 있다면 채택과 같이 답변삭제, 채택수 -1
          * 답변과 관련하여 채택이 없다면 채택만 삭제, 채택수는 그대로
@@ -118,7 +119,8 @@ public class AnswerService {
      */
     @Transactional
     public void saveAdoptAnswer(AdoptAnswerDTO adoptAnswerDTO, Long loginId) {
-        Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId());
+        Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId()).orElseThrow(
+                NotFoundAnswer::new);;
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
         // 글을쓴 유저인지 아닌지 체크
@@ -145,7 +147,8 @@ public class AnswerService {
     @Transactional
     public void updateLikeCount(Long answerId, Long loginId) {
         Optional<AnswerRecommend> recommend = answerRecommendRepository.findRecommend(answerId, loginId);
-        Answer answer = answerRepository.findAnswer(answerId);
+        Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
+                NotFoundAnswer::new);
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
 

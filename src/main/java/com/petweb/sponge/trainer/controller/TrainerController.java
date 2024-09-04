@@ -60,7 +60,6 @@ public class TrainerController {
 
     /**
      * 훈련사 정보 수정
-     * TODO delete문 수정 필요 현재 여러번 나가고 있음
      * @param trainerId
      * @param trainerDetailDTO
      */

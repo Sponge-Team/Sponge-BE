@@ -44,7 +44,6 @@ public class UserController {
 
     /**
      * 유저 정보 저장
-     * TODO 이것도 마찬가지로 쿼리 수정 필요
      * @param userDetailDTO
      * @return
      */
