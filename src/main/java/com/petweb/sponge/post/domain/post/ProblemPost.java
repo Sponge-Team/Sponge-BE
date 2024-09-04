@@ -56,6 +56,10 @@ public class ProblemPost {
     @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
     private List<PostImage> postImages= new ArrayList<>();
 
+    public void setPostCategories(List<PostCategory> postCategories) {
+        this.postCategories = postCategories;
+    }
+
     // 추천수 증가
     public void increaseLikeCount() {
         this.likeCount++;

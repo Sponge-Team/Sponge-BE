@@ -47,9 +47,16 @@ public class ProblemPostController {
         return new ResponseEntity<>(problemPostList, HttpStatus.OK);
     }
 
+    /**
+     * 검색 기능
+     * @param keyword
+     * @param page
+     * @return
+     */
     @GetMapping("/search")
-    public void searchPost(@RequestParam String keyword) {
-        problemPostService.searchPost(keyword);
+    public ResponseEntity<List<ProblemPostListDTO>> searchPost(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
+        List<ProblemPostListDTO> problemPostList = problemPostService.searchPost(keyword,page);
+        return new ResponseEntity<>(problemPostList, HttpStatus.OK);
     }
 
     /**
