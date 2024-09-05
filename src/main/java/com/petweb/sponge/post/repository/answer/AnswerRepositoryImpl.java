@@ -29,8 +29,6 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
     public List<Answer> findAllAnswerWithTrainer(Long problemPostId) {
         List<Answer> answerList = queryFactory
                 .selectFrom(answer)
-                // TODO trainer 현재 N+1 로 나감 그러나 패치조인하면 훈련사가 탈퇴시 문제 발생
-                .leftJoin(answer.trainer,trainer).fetchJoin()
                 .leftJoin(answer.problemPost,problemPost).fetchJoin()
                 .leftJoin(answer.adoptAnswer, adoptAnswer).fetchJoin()
                 .where(answer.problemPost.id.eq(problemPostId))
@@ -50,8 +48,6 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
     public Optional<Answer> findAnswer(Long answerId) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(answer)
-                //TODO 훈련사 데이터가 없을 시 문제가 생김
-                .leftJoin(answer.trainer, trainer).fetchJoin()
                 .leftJoin(answer.problemPost, problemPost).fetchJoin()
                 .where(answer.id.eq(answerId))
                 .fetchOne());
