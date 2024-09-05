@@ -1,6 +1,5 @@
 package com.petweb.sponge.post.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.exception.error.*;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
@@ -80,11 +79,15 @@ public class AnswerService {
      *
      * @param answerId
      * @param answerUpdateDTO
+     * @param loginId
      */
     @Transactional
-    public void updateAnswer(Long answerId, AnswerUpdateDTO answerUpdateDTO) {
+    public void updateAnswer(Long answerId, AnswerUpdateDTO answerUpdateDTO, Long loginId) {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 NotFoundAnswer::new);
+        if (!loginId.equals(answer.getTrainer().getId())) {
+            throw new NotFoundTrainer();
+        }
         answer.setContent(answerUpdateDTO.getContent());
     }
 

@@ -6,7 +6,6 @@ import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.Gender;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +50,7 @@ class PetServiceTest {
                 .user(findUser)
                 .build();
         petDTO = PetDTO.builder()
-                .name("몽미")
+                .petName("몽미")
                 .breed("골든 리트리버")
                 .gender(Gender.NEUTERED_MALE.getCode())
                 .age(30)
@@ -70,7 +68,7 @@ class PetServiceTest {
 
         // Then
         assertThat(findPet).isNotNull();
-        assertThat(findPet.getName()).isEqualTo(petDTO.getName());
+        assertThat(findPet.getPetName()).isEqualTo(petDTO.getPetName());
 
     }
     @Test
@@ -84,7 +82,7 @@ class PetServiceTest {
         petService.savePet(loginId, petDTO);
 
         //Then
-        assertThat(pet.getName()).isEqualTo(petDTO.getName());
+        assertThat(pet.getName()).isEqualTo(petDTO.getPetName());
 
     }
 }

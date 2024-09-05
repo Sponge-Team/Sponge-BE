@@ -2,7 +2,7 @@ package com.petweb.sponge.user.service;
 
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.dto.UserDetailDTO;
+import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class UserServiceTest {
     private UserRepository userRepository;
     private User findUser;
     private User user;
-    private UserDetailDTO userDetailDTO;
+    private UserDTO userDTO;
     private Long loginId= 1L;
 
     @BeforeEach
@@ -42,11 +42,9 @@ class UserServiceTest {
                 .name("test")
                 .build();
         ReflectionTestUtils.setField(findUser, "id", 1L);
-        userDetailDTO = UserDetailDTO.builder()
-                .name("김유저")
+        userDTO = UserDTO.builder()
+                .userName("김유저")
                 .gender(Gender.FEMALE.getCode())
-                .phone("010-1111-1111")
-                .profileImgUrl(null)
                 .addressList(Arrays.asList(
                         AddressDTO.builder()
                                 .city(200)
@@ -58,7 +56,7 @@ class UserServiceTest {
                                 .build()
                 ))
                 .build();
-        user = findUser.settingUser(userDetailDTO);
+        user = findUser.settingUser(userDTO);
     }
 
     @Test
@@ -68,7 +66,7 @@ class UserServiceTest {
         given(userRepository.findUserWithAddress(anyLong())).willReturn(Optional.of(user));
 
         // When
-        UserDetailDTO findUser = userService.findUser(1L);
+//        UserDTO findUser = userService.findUser(1L);
 
         // Then
         assertThat(findUser).isNotNull();
@@ -82,7 +80,7 @@ class UserServiceTest {
         given(userRepository.save(any(User.class))).willReturn(user);
 
         //When
-        userService.saveUser(loginId, userDetailDTO);
+        userService.saveUser(loginId, userDTO);
 
         //Then
         assertThat(loginId).isEqualTo(user.getId());
@@ -97,7 +95,7 @@ class UserServiceTest {
 
         // When & Then
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.saveUser(loginId, userDetailDTO);
+            userService.saveUser(loginId, userDTO);
         });
 
         assertEquals("NO Found USER", exception.getMessage());

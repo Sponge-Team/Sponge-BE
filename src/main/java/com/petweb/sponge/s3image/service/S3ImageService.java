@@ -20,6 +20,20 @@ public class S3ImageService {
     private String bucket;
     private final AmazonS3 amazonS3;
 
+
+    public String saveImage(MultipartFile file, String dir) {
+        String originalFilename = dir + "/" + createFileName(file.getOriginalFilename());
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+        try {
+            amazonS3.putObject(bucket, originalFilename, file.getInputStream(), metadata);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return originalFilename;
+    }
+
     /**
      * 복수의 사진 파일 AWS에 저장
      *
@@ -83,5 +97,6 @@ public class S3ImageService {
         }
         return fileName.substring(fileName.lastIndexOf("."));
     }
+
 
 }

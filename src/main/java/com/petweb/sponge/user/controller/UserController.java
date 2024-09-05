@@ -2,7 +2,9 @@ package com.petweb.sponge.user.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
+import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.user.dto.UserDetailDTO;
+import com.petweb.sponge.user.dto.UserUpdateDTO;
 import com.petweb.sponge.user.service.UserService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import jakarta.servlet.http.Cookie;
@@ -22,6 +24,7 @@ public class UserController {
 
     /**
      * 유저 단건조회
+     *
      * @param userId
      * @return
      */
@@ -33,6 +36,7 @@ public class UserController {
 
     /**
      * 자신의 계정정보를 불러옴
+     *
      * @return
      */
     @GetMapping("/my_info")
@@ -44,43 +48,44 @@ public class UserController {
 
     /**
      * 유저 정보 저장
-     * @param userDetailDTO
+     *
+     * @param userDTO
      * @return
      */
     @PostMapping()
     @UserAuth
-    public void signup(@RequestBody UserDetailDTO userDetailDTO) {
-         userService.saveUser(authorizationUtil.getLoginId(), userDetailDTO);
+    public void signup(@RequestBody UserDTO userDTO) {
+        userService.saveUser(authorizationUtil.getLoginId(), userDTO);
 
     }
 
     /**
      * 유저 정보 수정
+     *
      * @param userId
      */
     @PatchMapping("/{userId}")
     @UserAuth
-    public void updateUser(@PathVariable("userId")Long userId,@RequestBody UserDetailDTO userDetailDTO) throws AuthenticationException {
-        if (authorizationUtil.getLoginId().equals(userId)){
-            userService.updateUser(userId,userDetailDTO);
-        }
-        else {
+    public void updateUser(@PathVariable("userId") Long userId, @RequestBody UserUpdateDTO userUpdateDTO) {
+        if (authorizationUtil.getLoginId().equals(userId)) {
+            userService.updateUser(userId, userUpdateDTO);
+        } else {
             throw new LoginIdError();
         }
     }
 
     /**
      * 회원탈퇴
+     *
      * @param userId
      * @param response
      */
     @DeleteMapping("/{userId}")
     @UserAuth
-    public void removeUser(@PathVariable("userId") Long userId, HttpServletResponse response) throws AuthenticationException {
-        if (authorizationUtil.getLoginId().equals(userId)){
-        userService.deleteUser(userId);
-        }
-        else {
+    public void removeUser(@PathVariable("userId") Long userId, HttpServletResponse response) {
+        if (authorizationUtil.getLoginId().equals(userId)) {
+            userService.deleteUser(userId);
+        } else {
             throw new LoginIdError();
         }
 

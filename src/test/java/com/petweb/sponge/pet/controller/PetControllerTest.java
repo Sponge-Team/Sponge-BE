@@ -1,6 +1,5 @@
 package com.petweb.sponge.pet.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.pet.service.PetService;
@@ -9,7 +8,6 @@ import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,7 +37,7 @@ class PetControllerTest {
     @BeforeEach
     public void setUp() {
         petDTO = PetDTO.builder()
-                .name("몽미")
+                .petName("몽미")
                 .breed("골든 리트리버")
                 .gender(Gender.NEUTERED_MALE.getCode())
                 .age(30)
@@ -83,7 +81,7 @@ class PetControllerTest {
     @WithMockUser
     void removePet() throws Exception {
         // Given
-        willDoNothing().given(petService).deletePet(anyLong());
+//        willDoNothing().given(petService).deletePet(anyLong(), petId);
 
         // When // Given
         mockMvc.perform(delete("/api/pet/{petId}", 1L)
