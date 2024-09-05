@@ -4,7 +4,7 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.TestConfig;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.dto.UserDetailDTO;
+import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.utils.Gender;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +34,10 @@ class UserRepositoryTest {
                 .email("test")
                 .name("test")
                 .build();
-        UserDetailDTO userDetailDTO = UserDetailDTO
+        UserDTO userDTO = UserDTO
                 .builder()
-                .name("김유저")
+                .userName("김유저")
                 .gender(Gender.FEMALE.getCode())
-                .phone("010-1111-1111")
-                .profileImgUrl(null)
                 .addressList(Arrays.asList(
                         AddressDTO.builder()
                                 .city(200)
@@ -51,7 +49,7 @@ class UserRepositoryTest {
                                 .build()
                 ))
                 .build();
-        user.settingUser(userDetailDTO);
+        user.settingUser(userDTO);
         userRepository.save(user);
         em.flush();
         em.clear();

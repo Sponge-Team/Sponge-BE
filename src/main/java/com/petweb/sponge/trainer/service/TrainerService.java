@@ -110,7 +110,6 @@ public class TrainerService {
         return reviewList.stream().map(review -> ReviewDetailDTO.builder()
                 .userId(review.getUser().getId())
                 .userName(review.getUser().getName())
-                .userProfileImgUrl(review.getUser().getProfileImgUrl())
                 .score(review.getScore())
                 .content(review.getContent()).build()).collect(Collectors.toList());
     }

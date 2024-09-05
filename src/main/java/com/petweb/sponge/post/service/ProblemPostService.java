@@ -251,6 +251,8 @@ public class ProblemPostService {
      */
     private PostDetailDTO toDetailDto(ProblemPost problemPost) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        //펫 정보를 삭제하지 않았다면
         Optional<Pet> pet = petRepository.findById(problemPost.getPet().getId());
         if (pet.isPresent()) {
             return PostDetailDTO.builder()

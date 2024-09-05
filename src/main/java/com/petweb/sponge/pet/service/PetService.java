@@ -2,6 +2,7 @@ package com.petweb.sponge.pet.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.exception.error.NotFoundPet;
+import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.pet.repository.PetRepository;
@@ -22,6 +23,7 @@ public class PetService {
 
     /**
      * 펫 정보 단건 조회
+     *
      * @param petId
      * @return
      */
@@ -44,8 +46,10 @@ public class PetService {
         return petList.stream().map(pet -> toDto(pet)).collect(Collectors.toList());
 
     }
+
     /**
      * 펫 정보 저장
+     *
      * @param loginId
      * @param petDTO
      */
@@ -55,7 +59,7 @@ public class PetService {
         User user = userRepository.findById(loginId).orElseThrow(
                 () -> new NotFoundException("NO Found USER"));
         Pet pet = Pet.builder()
-                .name(petDTO.getName())
+                .name(petDTO.getPetName())
                 .breed(petDTO.getBreed())
                 .gender(petDTO.getGender())
                 .age(petDTO.getAge())
@@ -63,29 +67,43 @@ public class PetService {
                 .user(user)
                 .build();
         //반려견 저장
-      petRepository.save(pet);
+        petRepository.save(pet);
+    }
+
+    @Transactional
+    public void updatePet(Long loginId, Long petId, PetDTO petDTO) {
+        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+        if (!pet.getUser().getId().equals(loginId)) {
+            throw new NotFoundUser();
+        }
+        pet.updatePet(petDTO);
     }
 
     /**
      * 펫 정보 삭제
+     *
+     * @param loginId
      * @param petId
      */
     @Transactional
-    public void deletePet(Long petId) {
+    public void deletePet(Long loginId, Long petId) {
+        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+        if (!pet.getUser().getId().equals(loginId)) {
+            throw new NotFoundUser();
+        }
         petRepository.deleteById(petId);
     }
 
     private PetDTO toDto(Pet pet) {
         return PetDTO.builder()
                 .petId(pet.getId())
-                .name(pet.getName())
+                .petName(pet.getName())
                 .breed(pet.getBreed())
                 .gender(pet.getGender())
                 .age(pet.getAge())
                 .weight(pet.getWeight())
                 .build();
     }
-
 
 
 }

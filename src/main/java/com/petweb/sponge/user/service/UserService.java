@@ -1,10 +1,12 @@
 package com.petweb.sponge.user.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.exception.error.NotFoundUser;
+import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.user.dto.UserDetailDTO;
+import com.petweb.sponge.user.dto.UserUpdateDTO;
 import com.petweb.sponge.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,12 @@ public class UserService {
         // user,address 한번에 조회
         User user = userRepository.findUserWithAddress(userId).orElseThrow(
                 NotFoundUser::new);
-        return toDto(user);
+        return toDetailDto(user);
     }
 
     /**
      * 유저 내정보 조회
+     *
      * @param loginId
      * @return
      */
@@ -45,39 +48,37 @@ public class UserService {
                 NotFoundUser::new);
 
 
-        return toDto(user);
+        return toDetailDto(user);
     }
 
     /**
      * 유저 정보 저장
      *
      * @param loginId
-     * @param userDetailDTO
+     * @param userDTO
      * @return
      */
     @Transactional
-    public void saveUser(Long loginId, UserDetailDTO userDetailDTO) {
+    public void saveUser(Long loginId, UserDTO userDTO) {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
-
-        user.settingUser(userDetailDTO);
+        user.settingUser(userDTO);
         userRepository.save(user);
     }
 
     /**
      * 유저 정보 수정
-     *
      * @param userId
-     * @param userDetailDTO
+     * @param userUpdateDTO
      */
     @Transactional
-    public void updateUser(Long userId, UserDetailDTO userDetailDTO) {
+    public void updateUser(Long userId, UserUpdateDTO userUpdateDTO) {
         User user = userRepository.findById(userId).orElseThrow(
                 NotFoundUser::new);
         //초기화
         userRepository.initUser(userId);
-        user.settingUser(userDetailDTO);
+        user.updateUser(userUpdateDTO);
     }
 
     /**
@@ -92,17 +93,30 @@ public class UserService {
         userRepository.deleteUser(user.getId());
     }
 
-    private UserDetailDTO toDto(User user) {
+    /**
+     * DetailDto 변환
+     * @param user
+     * @return
+     */
+    private UserDetailDTO toDetailDto(User user) {
         List<AddressDTO> addressDTOList = user.getUserAddresses().stream().map(userAddress -> AddressDTO.builder()
                 .city(userAddress.getCity())
                 .town(userAddress.getTown())
                 .build()).collect(Collectors.toList());
+        List<PetDTO> petDTOList = user.getPets().stream().map(pet ->
+                        PetDTO.builder()
+                                .petId(pet.getId())
+                                .petName(pet.getName())
+                                .breed(pet.getBreed())
+                                .gender(pet.getGender())
+                                .age(pet.getAge())
+                                .weight(pet.getWeight())
+                                .petImgUrl(pet.getPetImgUrl()).build())
+                .collect(Collectors.toList());
         return UserDetailDTO.builder()
                 .userId(user.getId())
-                .name(user.getName())
-                .gender(user.getGender())
-                .phone(user.getPhone())
-                .profileImgUrl(user.getProfileImgUrl())
+                .userName(user.getName())
+                .petList(petDTOList)
                 .addressList(addressDTOList)
                 .build();
     }

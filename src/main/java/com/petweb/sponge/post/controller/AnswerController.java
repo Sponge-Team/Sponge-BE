@@ -52,7 +52,7 @@ public class AnswerController {
     @PatchMapping("/{answerId}")
     @TrainerAuth
     public void modifyAnswer(@PathVariable Long answerId, @RequestBody AnswerUpdateDTO answerUpdateDTO) {
-        answerService.updateAnswer(answerId, answerUpdateDTO);
+        answerService.updateAnswer(answerId, answerUpdateDTO,authorizationUtil.getLoginId());
     }
 
     /**

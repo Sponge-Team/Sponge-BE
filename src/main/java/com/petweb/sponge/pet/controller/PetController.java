@@ -56,7 +56,11 @@ public class PetController {
         petService.savePet(authorizationUtil.getLoginId(), petDTO);
     }
 
-
+    @PatchMapping("/{petId}")
+    @UserAuth
+    public void updatePet(@PathVariable("petId") Long petId, @RequestBody PetDTO petDTO) {
+        petService.updatePet(authorizationUtil.getLoginId(), petId, petDTO);
+    }
 
     /**
      * 반려동물 삭제
@@ -66,7 +70,7 @@ public class PetController {
     @DeleteMapping("/{petId}")
     @UserAuth
     public void removePet(@PathVariable("petId") Long petId) {
-        petService.deletePet(petId);
+        petService.deletePet(authorizationUtil.getLoginId(), petId);
     }
 
 
