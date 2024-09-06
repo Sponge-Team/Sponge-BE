@@ -62,7 +62,7 @@ class UserControllerTest {
     @WithMockUser
     void getUser() throws Exception {
         // Given
-        given(userService.findUser(anyLong())).willReturn(userDTO);
+//        given(userService.findUser(anyLong())).willReturn(userDTO);
 
         // When // Then
         mockMvc.perform(get("/api/user/{userId}",1L)

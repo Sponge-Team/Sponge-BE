@@ -104,14 +104,5 @@ public class ProblemPostController {
         problemPostService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
     }
 
-    /**
-     * 글 북마크 업데이트
-     *
-     * @param postIdDTO
-     */
-    @PostMapping("/bookmark")
-    @UserAuth
-    public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
-        problemPostService.updateBookmark(postIdDTO, authorizationUtil.getLoginId());
-    }
+
 }

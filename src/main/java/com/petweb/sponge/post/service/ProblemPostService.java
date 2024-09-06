@@ -35,7 +35,6 @@ public class ProblemPostService {
     private final ProblemPostRepository problemPostRepository;
     private final ProblemTypeRepository problemTypeRepository;
     private final PostRecommendRepository postRecommendRepository;
-    private final BookmarkRepository bookmarkRepository;
 
 
     /**
@@ -201,29 +200,6 @@ public class ProblemPostService {
         }
     }
 
-    /**
-     * 북마크 업데이트
-     *
-     * @param postIdDTO
-     * @param loginId
-     */
-    public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
-        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
-        ProblemPost problemPost = problemPostRepository.findPostWithUser(postIdDTO.getProblemPostId()).orElseThrow(
-                NotFoundPost::new);;
-
-        // 이미 북마크 되어있다면 삭제 아니라면 저장
-        if (bookmark.isPresent()) {
-            bookmarkRepository.delete(bookmark.get());
-        } else {
-            Bookmark buildBookmark = Bookmark.builder()
-                    .problemPost(problemPost)
-                    .user(problemPost.getUser())
-                    .build();
-            bookmarkRepository.save(buildBookmark);
-        }
-
-    }
 
     /**
      * entity로 변환

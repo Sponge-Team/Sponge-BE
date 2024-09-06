@@ -2,6 +2,8 @@ package com.petweb.sponge.user.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
+import com.petweb.sponge.post.dto.post.PostIdDTO;
+import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.user.dto.UserDTO;
 import com.petweb.sponge.user.dto.UserDetailDTO;
 import com.petweb.sponge.user.dto.UserUpdateDTO;
@@ -10,10 +12,11 @@ import com.petweb.sponge.utils.AuthorizationUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.auth.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -94,6 +97,23 @@ public class UserController {
         cookie.setPath("/");
         response.addCookie(cookie);
         response.setStatus(200);
+    }
+
+    @GetMapping("/bookmark")
+    @UserAuth
+    public ResponseEntity<List<ProblemPostListDTO>> getBookmark() {
+        List<ProblemPostListDTO> bookmarkList = userService.findBookmark(authorizationUtil.getLoginId());
+        return new ResponseEntity<>(bookmarkList,HttpStatus.OK);
+    }
+    /**
+     * 글 북마크 업데이트
+     *
+     * @param postIdDTO
+     */
+    @PostMapping("/bookmark")
+    @UserAuth
+    public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
+        userService.updateBookmark(postIdDTO, authorizationUtil.getLoginId());
     }
 
 }

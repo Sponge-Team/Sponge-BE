@@ -115,6 +115,18 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
     }
 
     @Override
+    public List<ProblemPost> findAllPostByBookmark(Long loginId) {
+
+        return queryFactory
+                .select(bookmark.problemPost)
+                .from(bookmark)
+                .leftJoin(bookmark.problemPost.postCategories, postCategory).fetchJoin()
+                .where(bookmark.user.id.eq(loginId))
+                .fetch();
+
+    }
+
+    @Override
     public void deletePost(Long problemPostId) {
         //카테고리별 글 삭제
         queryFactory

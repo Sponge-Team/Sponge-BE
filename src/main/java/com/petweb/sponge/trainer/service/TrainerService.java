@@ -137,7 +137,7 @@ public class TrainerService {
     }
 
     /**
-     * Dto로 변환하는 메소드 (지연 로딩으로 인해서 쿼리가 추가 2번 나가는 문제 있음)
+     * Dto로 변환하는 메소드
      *
      * @param trainer
      * @return
