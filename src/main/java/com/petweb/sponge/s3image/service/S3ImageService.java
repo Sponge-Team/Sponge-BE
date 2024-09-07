@@ -84,7 +84,7 @@ public class S3ImageService {
         if (fileName.isEmpty()) {
             throw new RuntimeException("INVALID FILE");
         }
-        ArrayList<String> fileValidate = new ArrayList<>();
+        ArrayList<String> fileValidate = new ArrayList<>(); // P: 클래스 내부에서 상수로 관리하는게 어떨까요?
         fileValidate.add(".jpg");
         fileValidate.add(".jpeg");
         fileValidate.add(".png");

@@ -36,6 +36,10 @@ public class ProblemPost {
     private int answerCount; // 답변수
     @CreatedDate
     private Timestamp createdAt;
+    /**
+     * T: Timestamp 대신 ZonedDateTime을 사용하는게 어떨까요?
+     * OS, DB의 Timezone에 의존하기 때문에 명시적으로 나타내는게 인식하기 쉬울듯 합니다
+     */
     @LastModifiedDate
     private Timestamp modifiedAt;
 

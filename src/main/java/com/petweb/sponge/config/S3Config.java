@@ -10,6 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
+	/**
+	 * T: 생성자 바인딩 방식을 사용하면 어떨까요?
+	 * value 어노테이션을 하나하나씩 붙일 필요 없고, 생성자로 주입받기 때문에 불변의 이득을 취할 수 있습니다
+	 * 참고: https://mangkyu.tistory.com/189
+	 */
 	@Value("${cloud.aws.credentials.access-key}")
 	private String accessKey;
 	@Value("${cloud.aws.credentials.secret-key}")

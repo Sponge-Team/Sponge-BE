@@ -45,6 +45,10 @@ public class JwtFilter extends OncePerRequestFilter {
         //cookie들을 불러온 뒤 token Key에 담긴 쿠키를 찾음
         String authorization = null;
         Cookie[] cookies = request.getCookies();
+        /**
+         * P: early return을 쓰는게 어떨까요?
+         * if (cookies == null) throw ~~
+         */
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("Authorization")) {
