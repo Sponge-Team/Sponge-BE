@@ -52,6 +52,9 @@ public class ProblemPost {
     @JoinColumn(name = "pet_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Pet pet;
 
+    /**
+     * 1:N 관계를 조회하려면 애플리케이션 메모리에 적재하고 쿼리 결과를 반환하기 때문에 Batch Size를 꼭 설정하는게 좋습니다
+     */
     @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
     private List<PostCategory> postCategories = new ArrayList<>();
 
