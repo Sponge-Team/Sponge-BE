@@ -1,7 +1,9 @@
 package com.petweb.sponge.post.repository.post;
 
+import com.petweb.sponge.post.domain.ProblemType;
 import com.petweb.sponge.post.domain.post.PostCategory;
 import com.petweb.sponge.post.domain.post.ProblemPost;
+import com.petweb.sponge.utils.ProblemTypeCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -56,7 +58,7 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
          * P: problemTypeCode은 Enum으로 관리하는게 어떨까요?
          * 코드 값이 어떤 의미를 갖는지 한 눈에 알아보기 어려워보입니다
          */
-        if (problemTypeCode == 0) {
+        if (Objects.equals(problemTypeCode, ProblemTypeCode.ALL.getCode())) {
             // 전체 조회
             return queryFactory
                     .select(problemPost)

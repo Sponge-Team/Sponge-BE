@@ -1,5 +1,6 @@
 package com.petweb.sponge.jwt;
 
+import com.petweb.sponge.exception.error.NotFoundAnswer;
 import com.petweb.sponge.oauth2.dto.CustomOAuth2User;
 import com.petweb.sponge.oauth2.dto.LoginAuth;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -49,15 +50,13 @@ public class JwtFilter extends OncePerRequestFilter {
          * P: early return을 쓰는게 어떨까요?
          * if (cookies == null) throw ~~
          */
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("Authorization")) {
-                    authorization = cookie.getValue();
-                }
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("Authorization")) {
+                authorization = cookie.getValue();
             }
         }
 
-        //Authorization 헤더 검증
+        //Authorization 검증
         if (authorization == null) {
             log.info("token is null!");
             filterChain.doFilter(request, response);
@@ -80,18 +79,13 @@ public class JwtFilter extends OncePerRequestFilter {
             newToken.setMaxAge(0);
             newToken.setPath("/");
 
-            //loginType 삭제
-            Cookie loginType = new Cookie("loginType",null);
-            loginType.setMaxAge(0);
-            loginType.setPath("/");
-
             response.addCookie(newToken);
-            response.addCookie(loginType);
-
+            throw new NotFoundAnswer();
             //자동 로그아웃되면 다시 로그인할 경로 재설정
-            // TODO 경로 체크 필요
-            response.sendRedirect("/login");
-            return;
+//            // TODO 경로 체크 필요
+              // TODO 토큰 만료시 어떻게 받을지
+//            response.sendRedirect("/login");
+//            return;
         }
 
 

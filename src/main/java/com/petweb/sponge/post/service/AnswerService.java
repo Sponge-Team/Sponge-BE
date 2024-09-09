@@ -107,7 +107,7 @@ public class AnswerService {
          * get 메서드가 체이닝되어 있어 가독성이 떨어지고 응집도가 낮아보입니다.
          * 디미터의 법칙: https://mangkyu.tistory.com/147
          */
-        if (!loginId.equals(answer.getTrainer().getId())) {
+        if (!answer.isWriteTrainer(loginId)) {
             throw new NotFoundTrainer();
         }
         /**
@@ -134,8 +134,8 @@ public class AnswerService {
                 NotFoundAnswer::new);
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
-        // 글을쓴 유저인지 아닌지 체크
-        if (!answer.getProblemPost().getUser().getId().equals(user.getId())) {
+        // 문제행동 글을쓴 유저인지 아닌지 체크
+        if (!answer.isPostWriteUser(user.getId())) {
             throw new LoginIdError();
         }
 

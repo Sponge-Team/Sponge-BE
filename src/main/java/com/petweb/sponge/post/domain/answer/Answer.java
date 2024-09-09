@@ -61,4 +61,12 @@ public class Answer {
         this.problemPost = problemPost;
         this.trainer = trainer;
     }
+    // 답변글 작성 아이디와 로그인아이디가 맞는지
+    public boolean isWriteTrainer(Long loginId) {
+        return getTrainer().getId().equals(loginId);
+    }
+    // 문젬행동글을 작성한 유저인지 아닌지
+    public boolean isPostWriteUser(Long userId) {
+        return getProblemPost().getUser().getId().equals(userId);
+    }
 }

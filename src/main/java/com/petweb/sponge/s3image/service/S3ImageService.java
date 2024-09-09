@@ -19,6 +19,16 @@ public class S3ImageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final AmazonS3 amazonS3;
+    private static final ArrayList<String> fileValidate = new ArrayList<>();
+
+    static {
+        fileValidate.add(".jpg");
+        fileValidate.add(".jpeg");
+        fileValidate.add(".png");
+        fileValidate.add(".JPG");
+        fileValidate.add(".JPEG");
+        fileValidate.add(".PNG");
+    }
 
 
     public String saveImage(MultipartFile file, String dir) {
@@ -84,13 +94,6 @@ public class S3ImageService {
         if (fileName.isEmpty()) {
             throw new RuntimeException("INVALID FILE");
         }
-        ArrayList<String> fileValidate = new ArrayList<>(); // P: 클래스 내부에서 상수로 관리하는게 어떨까요?
-        fileValidate.add(".jpg");
-        fileValidate.add(".jpeg");
-        fileValidate.add(".png");
-        fileValidate.add(".JPG");
-        fileValidate.add(".JPEG");
-        fileValidate.add(".PNG");
         String idxFileName = fileName.substring(fileName.lastIndexOf("."));
         if (!fileValidate.contains(idxFileName)) {
             throw new RuntimeException("INVALID FILE EXTENSION");

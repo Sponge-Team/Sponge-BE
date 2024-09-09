@@ -12,4 +12,5 @@ public enum LoginType {
     LoginType(String loginType) {
         this.loginType = loginType;
     }
+
 }

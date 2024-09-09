@@ -8,6 +8,7 @@ import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.utils.LoginType;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
         //훈련사로 로그인시
-        if (Objects.equals(loginType, "trainer")) {
+        if (Objects.equals(loginType, LoginType.TRAINER.getLoginType())) {
             Trainer existData = trainerRepository.findByEmail(email).orElse(null);
             //첫 로그인일 시
             if (existData == null) {
@@ -70,7 +71,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
         //일반 유저로 로그인시
-        else if (Objects.equals(loginType, "user")) {
+        else if (Objects.equals(loginType, LoginType.USER.getLoginType())) {
             User existData = userRepository.findByEmail(email).orElse(null);
 
             //첫 로그인일 시
