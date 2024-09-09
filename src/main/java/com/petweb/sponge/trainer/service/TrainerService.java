@@ -1,6 +1,5 @@
 package com.petweb.sponge.trainer.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.trainer.domain.Review;
@@ -122,10 +121,10 @@ public class TrainerService {
      */
     @Transactional
     public void saveReview(ReviewDTO reviewDTO, Long loginId) {
-        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-                NotFoundTrainer::new);
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
+        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
+                NotFoundTrainer::new);
 
         Review review = Review.builder()
                 .score(reviewDTO.getScore())
