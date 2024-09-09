@@ -36,6 +36,10 @@ public class ProblemPost {
     private int answerCount; // 답변수
     @CreatedDate
     private Timestamp createdAt;
+    /**
+     * T: Timestamp 대신 ZonedDateTime을 사용하는게 어떨까요?
+     * OS, DB의 Timezone에 의존하기 때문에 명시적으로 나타내는게 인식하기 쉬울듯 합니다
+     */
     @LastModifiedDate
     private Timestamp modifiedAt;
 
@@ -48,6 +52,9 @@ public class ProblemPost {
     @JoinColumn(name = "pet_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Pet pet;
 
+    /**
+     * 1:N 관계를 조회하려면 애플리케이션 메모리에 적재하고 쿼리 결과를 반환하기 때문에 Batch Size를 꼭 설정하는게 좋습니다
+     */
     @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
     private List<PostCategory> postCategories = new ArrayList<>();
 

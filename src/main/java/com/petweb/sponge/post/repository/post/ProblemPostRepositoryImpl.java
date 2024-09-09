@@ -52,6 +52,10 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
         // 페이지 번호와 페이지 크기를 계산
         int offset = page * PAGE_SIZE;
 
+        /**
+         * P: problemTypeCode은 Enum으로 관리하는게 어떨까요?
+         * 코드 값이 어떤 의미를 갖는지 한 눈에 알아보기 어려워보입니다
+         */
         if (problemTypeCode == 0) {
             // 전체 조회
             return queryFactory

@@ -102,6 +102,11 @@ public class AnswerService {
         Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findAdoptAnswer(answerId, loginId);
         Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
                 NotFoundAnswer::new);
+        /**
+         * T: 객체 (answer)에게 메시지를 전달하는 방식을 사용해보는건 어떨까요?
+         * get 메서드가 체이닝되어 있어 가독성이 떨어지고 응집도가 낮아보입니다.
+         * 디미터의 법칙: https://mangkyu.tistory.com/147
+         */
         if (!loginId.equals(answer.getTrainer().getId())) {
             throw new NotFoundTrainer();
         }
