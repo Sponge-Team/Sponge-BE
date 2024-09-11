@@ -3,6 +3,7 @@ package com.petweb.sponge.post.repository.post;
 import com.petweb.sponge.post.domain.ProblemType;
 import com.petweb.sponge.post.domain.post.PostCategory;
 import com.petweb.sponge.post.domain.post.ProblemPost;
+import com.petweb.sponge.post.domain.post.QPostFile;
 import com.petweb.sponge.utils.ProblemTypeCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.petweb.sponge.post.domain.post.QBookmark.*;
 import static com.petweb.sponge.post.domain.post.QPostCategory.*;
-import static com.petweb.sponge.post.domain.post.QPostImage.*;
+import static com.petweb.sponge.post.domain.post.QPostFile.*;
 import static com.petweb.sponge.post.domain.post.QPostRecommend.*;
 import static com.petweb.sponge.post.domain.post.QProblemPost.*;
 import static com.petweb.sponge.post.domain.post.QTag.*;
@@ -156,8 +157,8 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
                 .execute();
         //이미지 삭제
         queryFactory
-                .delete(postImage)
-                .where(postImage.problemPost.id.eq(problemPostId))
+                .delete(postFile)
+                .where(postFile.problemPost.id.eq(problemPostId))
                 .execute();
         //게시글 삭제
         queryFactory
@@ -180,8 +181,8 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
                 .execute();
         //이미지 삭제
         queryFactory
-                .delete(postImage)
-                .where(postImage.problemPost.id.eq(problemPostId))
+                .delete(postFile)
+                .where(postFile.problemPost.id.eq(problemPostId))
                 .execute();
     }
 }

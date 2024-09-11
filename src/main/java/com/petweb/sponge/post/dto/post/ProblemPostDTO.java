@@ -13,5 +13,5 @@ public class ProblemPostDTO {
     private String duration;
     private List<Long> problemTypeList;
     private List<String> hasTagList;
-    private List<String> imageUrlList;
+    private List<String> fileUrlList;
 }

@@ -8,10 +8,8 @@ import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.post.*;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
-import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
-import com.petweb.sponge.post.repository.post.BookmarkRepository;
 import com.petweb.sponge.post.repository.post.PostRecommendRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -109,13 +107,13 @@ public class ProblemPostService {
         });
 
         //PostImage클래스 생성해서 저장
-        problemPostDTO.getImageUrlList().stream().map(imageUrl ->
-                        PostImage.builder()
-                                .imageUrl(imageUrl)
+        problemPostDTO.getFileUrlList().stream().map(imageUrl ->
+                        PostFile.builder()
+                                .fileUrl(imageUrl)
                                 .problemPost(problemPost)
                                 .build()
                 ).collect(Collectors.toList())
-                .forEach(postImage -> problemPost.getPostImages().add(postImage));
+                .forEach(postFile -> problemPost.getPostFiles().add(postFile));
 
 
         problemPostRepository.save(problemPost);
@@ -142,7 +140,7 @@ public class ProblemPostService {
 
         problemPost.updatePost(problemPostDTO.getTitle()
                 ,problemPostDTO.getContent()
-                ,problemPostDTO.getImageUrlList()
+                ,problemPostDTO.getFileUrlList()
                 ,problemPostDTO.getHasTagList());
 
         //ProblemType 조회해서 -> PostCategory로 변환 저장
@@ -248,8 +246,8 @@ public class ProblemPostService {
                             .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                     .hasTagList(problemPost.getTags().stream()
                             .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
-                    .imageUrlList(problemPost.getPostImages().stream()
-                            .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
+                    .fileUrlList(problemPost.getPostFiles().stream()
+                            .map(postFile -> postFile.getFileUrl()).collect(Collectors.toList()))
                     .build();
         } else {
             return PostDetailDTO.builder()
@@ -264,8 +262,8 @@ public class ProblemPostService {
                             .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                     .hasTagList(problemPost.getTags().stream()
                             .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
-                    .imageUrlList(problemPost.getPostImages().stream()
-                            .map(postImage -> postImage.getImageUrl()).collect(Collectors.toList()))
+                    .fileUrlList(problemPost.getPostFiles().stream()
+                            .map(postFile -> postFile.getFileUrl()).collect(Collectors.toList()))
                     .build();
 
         }

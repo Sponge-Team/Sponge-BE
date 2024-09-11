@@ -24,5 +24,5 @@ public class PostDetailDTO {
     private String createdAt; //생성시간
     private List<Long> problemTypeList;
     private List<String> hasTagList;
-    private List<String> imageUrlList;
+    private List<String> fileUrlList;
 }

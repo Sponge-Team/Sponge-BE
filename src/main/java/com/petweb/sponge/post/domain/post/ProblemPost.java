@@ -1,9 +1,6 @@
 package com.petweb.sponge.post.domain.post;
 
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.post.domain.post.PostCategory;
-import com.petweb.sponge.post.domain.post.PostImage;
-import com.petweb.sponge.post.domain.post.Tag;
 import com.petweb.sponge.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,8 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -62,7 +57,7 @@ public class ProblemPost {
     private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "problemPost", cascade = CascadeType.ALL)
-    private List<PostImage> postImages = new ArrayList<>();
+    private List<PostFile> postFiles = new ArrayList<>();
 
     public void setPostCategories(List<PostCategory> postCategories) {
         this.postCategories = postCategories;
@@ -105,11 +100,11 @@ public class ProblemPost {
         //이미지 링크 저장
         imageUrlList.forEach(imageUrl ->
                 {
-                    PostImage postImage = PostImage.builder()
-                            .imageUrl(imageUrl)
+                    PostFile postFile = PostFile.builder()
+                            .fileUrl(imageUrl)
                             .problemPost(this)
                             .build();
-                    getPostImages().add(postImage);
+                    getPostFiles().add(postFile);
                 }
         );
         // 카테고리별글 저장
