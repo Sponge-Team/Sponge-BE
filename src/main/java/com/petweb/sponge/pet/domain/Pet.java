@@ -40,6 +40,10 @@ public class Pet {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
+    public void setPetImgUrl(String petImgUrl) {
+        this.petImgUrl = petImgUrl;
+    }
+
     public void updatePet(PetDTO petDTO) {
         this.name = petDTO.getPetName();
         this.breed = petDTO.getBreed();

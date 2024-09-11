@@ -70,6 +70,12 @@ public class PetService {
         petRepository.save(pet);
     }
 
+    /**
+     * 펫 정보 업데이트
+     * @param loginId
+     * @param petId
+     * @param petDTO
+     */
     @Transactional
     public void updatePet(Long loginId, Long petId, PetDTO petDTO) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
@@ -94,6 +100,20 @@ public class PetService {
         petRepository.deleteById(petId);
     }
 
+    /**
+     * 펫 이미지 삭제
+     * @param loginId
+     * @param petId
+     */
+    @Transactional
+    public void deletePetImg(Long loginId, Long petId) {
+        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+        if (!pet.getUser().getId().equals(loginId)) {
+            throw new NotFoundUser();
+        }
+        pet.setPetImgUrl(null);
+    }
+
     private PetDTO toDto(Pet pet) {
         return PetDTO.builder()
                 .petId(pet.getId())
@@ -104,6 +124,7 @@ public class PetService {
                 .weight(pet.getWeight())
                 .build();
     }
+
 
 
 }
