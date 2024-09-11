@@ -1,10 +1,11 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.post.service.ProblemPostService;
 import com.petweb.sponge.s3.dto.FileListDTO;
-import com.petweb.sponge.post.service.PostFileService;
 import com.petweb.sponge.s3.service.S3DeleteService;
 import com.petweb.sponge.s3.service.S3UploadService;
+import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +23,8 @@ public class PostFileController {
 
     private final S3UploadService s3UploadService;
     private final S3DeleteService s3DeleteService;
-    private final PostFileService postFileService;
+    private final ProblemPostService problemPostService;
+    private final AuthorizationUtil authorizationUtil;
 
     /**
      * 게시글 이미지,동영상 업로드
@@ -40,16 +42,15 @@ public class PostFileController {
 
     /**
      * 게시글 이미지,동영상 삭제
-     * TODO 본인이 적은 글인지 체크 필요
+     *
      * @param fileListDTO
      */
-    @DeleteMapping
+    @DeleteMapping("/{problemPostId}")
     @UserAuth
-    public void deletePostFile(@RequestBody FileListDTO fileListDTO) {
+    public void deletePostFile(@PathVariable Long problemPostId, @RequestBody FileListDTO fileListDTO) {
         // S3에서 삭제
         s3DeleteService.deleteFiles(fileListDTO.getFileUrlList());
-
-        // DB에서 삭제
-        postFileService.deletePostFile(fileListDTO.getFileUrlList());
+        // DB에서 링크 삭제
+        problemPostService.deletePostFiles(authorizationUtil.getLoginId(), problemPostId, fileListDTO.getFileUrlList());
     }
 }

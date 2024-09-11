@@ -56,6 +56,10 @@ public class Trainer {
         this.adopt_count--;
     }
 
+    public void setProfileImgUrl(String profileImgUrl) {
+        this.profileImgUrl = profileImgUrl;
+    }
+
     @Builder
     public Trainer(String email, String name) {
         this.email = email;

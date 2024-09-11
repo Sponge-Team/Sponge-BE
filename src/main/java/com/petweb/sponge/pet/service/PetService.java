@@ -1,6 +1,7 @@
 package com.petweb.sponge.pet.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
@@ -80,7 +81,7 @@ public class PetService {
     public void updatePet(Long loginId, Long petId, PetDTO petDTO) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
         if (!pet.getUser().getId().equals(loginId)) {
-            throw new NotFoundUser();
+            throw new LoginIdError();
         }
         pet.updatePet(petDTO);
     }
@@ -95,7 +96,7 @@ public class PetService {
     public void deletePet(Long loginId, Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
         if (!pet.getUser().getId().equals(loginId)) {
-            throw new NotFoundUser();
+            throw new LoginIdError();
         }
         petRepository.deleteById(petId);
     }
@@ -109,7 +110,7 @@ public class PetService {
     public void deletePetImg(Long loginId, Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
         if (!pet.getUser().getId().equals(loginId)) {
-            throw new NotFoundUser();
+            throw new LoginIdError();
         }
         pet.setPetImgUrl(null);
     }

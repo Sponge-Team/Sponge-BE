@@ -1,5 +1,6 @@
 package com.petweb.sponge.trainer.service;
 
+import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.trainer.domain.Review;
@@ -40,6 +41,7 @@ public class TrainerService {
 
     /**
      * 내정보 조회
+     *
      * @param loginId
      * @return
      */
@@ -71,6 +73,7 @@ public class TrainerService {
 
     /**
      * 훈련사 정보 수정
+     *
      * @param trainerId
      * @param trainerDetailDTO
      */
@@ -95,6 +98,18 @@ public class TrainerService {
 
         //벌크성 쿼리로 history, address 한번에 삭제
         trainerRepository.deleteTrainer(trainer.getId());
+    }
+
+    /**
+     * 훈련사 이미지 삭제
+     *
+     * @param trainerId
+     */
+    @Transactional
+    public void deleteTrainerImg(Long trainerId) {
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                NotFoundTrainer::new);
+        trainer.setProfileImgUrl(null);
     }
 
     /**

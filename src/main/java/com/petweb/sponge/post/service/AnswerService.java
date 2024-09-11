@@ -86,7 +86,7 @@ public class AnswerService {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 NotFoundAnswer::new);
         if (!loginId.equals(answer.getTrainer().getId())) {
-            throw new NotFoundTrainer();
+            throw new LoginIdError();
         }
         answer.setContent(answerUpdateDTO.getContent());
     }

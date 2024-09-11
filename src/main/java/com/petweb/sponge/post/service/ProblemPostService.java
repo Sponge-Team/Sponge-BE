@@ -10,6 +10,7 @@ import com.petweb.sponge.post.domain.post.*;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
+import com.petweb.sponge.post.repository.post.PostFileRepository;
 import com.petweb.sponge.post.repository.post.PostRecommendRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -33,6 +34,7 @@ public class ProblemPostService {
     private final ProblemPostRepository problemPostRepository;
     private final ProblemTypeRepository problemTypeRepository;
     private final PostRecommendRepository postRecommendRepository;
+    private final PostFileRepository postFileRepository;
 
 
     /**
@@ -44,7 +46,8 @@ public class ProblemPostService {
     @Transactional(readOnly = true)
     public PostDetailDTO findPost(Long problemPostId) {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
-                NotFoundPost::new);;
+                NotFoundPost::new);
+        ;
         return toDetailDto(problemPost);
     }
 
@@ -55,21 +58,22 @@ public class ProblemPostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProblemPostListDTO> findPostList(Long problemTypeCode,int page) {
-        List<ProblemPost> problemPosts = problemPostRepository.findAllPostByProblemCode(problemTypeCode,page);
+    public List<ProblemPostListDTO> findPostList(Long problemTypeCode, int page) {
+        List<ProblemPost> problemPosts = problemPostRepository.findAllPostByProblemCode(problemTypeCode, page);
         return toPostListDto(problemPosts);
 
     }
 
     /**
      * 검색
+     *
      * @param keyword
      * @param page
      * @return
      */
     @Transactional(readOnly = true)
     public List<ProblemPostListDTO> searchPost(String keyword, int page) {
-        List<ProblemPost> problemPosts = problemPostRepository.searchPostByKeyword(keyword,page);
+        List<ProblemPost> problemPosts = problemPostRepository.searchPostByKeyword(keyword, page);
         return toPostListDto(problemPosts);
     }
 
@@ -139,9 +143,9 @@ public class ProblemPostService {
         problemPostRepository.initProblemPost(problemPostId);
 
         problemPost.updatePost(problemPostDTO.getTitle()
-                ,problemPostDTO.getContent()
-                ,problemPostDTO.getFileUrlList()
-                ,problemPostDTO.getHasTagList());
+                , problemPostDTO.getContent()
+                , problemPostDTO.getFileUrlList()
+                , problemPostDTO.getHasTagList());
 
         //ProblemType 조회해서 -> PostCategory로 변환 저장
         problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
@@ -162,7 +166,8 @@ public class ProblemPostService {
     @Transactional
     public void deletePost(Long loginId, Long problemPostId) {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
-                NotFoundPost::new);;
+                NotFoundPost::new);
+        ;
         // 글을 쓴 유저가 아닌경우
         if (!problemPost.getUser().getId().equals(loginId)) {
             throw new LoginIdError();
@@ -170,6 +175,21 @@ public class ProblemPostService {
         problemPostRepository.deletePost(problemPostId);
     }
 
+    /**
+     * 문제행동글 관련 파일 삭제
+     *
+     * @param loginId
+     * @param problemPostId
+     * @param fileUrlList
+     */
+    @Transactional
+    public void deletePostFiles(Long loginId, Long problemPostId, List<String> fileUrlList) {
+        ProblemPost problemPost = problemPostRepository.findById(problemPostId).orElseThrow(NotFoundPost::new);
+        if (!problemPost.getUser().getId().equals(loginId)) {
+            throw new LoginIdError();
+        }
+        postFileRepository.deleteByFiles(fileUrlList);
+    }
 
     /**
      * 추천수 업데이트
@@ -180,7 +200,8 @@ public class ProblemPostService {
     public void updateLikeCount(Long problemPostId, Long loginId) {
         Optional<PostRecommend> recommend = postRecommendRepository.findRecommend(problemPostId, loginId);
         ProblemPost problemPost = problemPostRepository.findPostWithUser(problemPostId).orElseThrow(
-                NotFoundPost::new);;
+                NotFoundPost::new);
+        ;
         /**
          * 추천이 이미 있다면 추천을 삭제 추천수 -1
          * 추천이 없다면 추천을 저장 추천수 +1
@@ -289,7 +310,6 @@ public class ProblemPostService {
                                 .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
     }
-
 
 
 }
