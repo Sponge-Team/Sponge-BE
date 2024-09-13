@@ -2,13 +2,13 @@ spring:
   profiles:
     include: aws
   datasource:
-    url: jdbc:h2:tcp://localhost/~/spongedb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
@@ -26,11 +26,14 @@ spring:
             client-name: google
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
             authorization-grant-type: authorization_code
             scope:
               - email
               - profile
+
+  server:
+    url: ${SERVER_URL}
 
   # jwt
   jwt:
