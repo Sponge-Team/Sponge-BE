@@ -20,7 +20,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtUtil jwtUtil;
-
+    @Value("${spring.server.url}")
+    private String serverUrl;
     @Value("${spring.jwt.expire-length}")
     private int expireInt;
 
@@ -45,7 +46,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(loginTypeCookie);
 
         response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:8080/");
+        //TODO 링크 바꿔야함
+        response.sendRedirect(serverUrl);
     }
 
     private Cookie createCookie(String key, String value) {
