@@ -15,15 +15,15 @@ public class TrainerAddress {
     @Id
     @GeneratedValue
     private Long id;
-    private int city;
-    private int town;
+    private String city;
+    private String town;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
     @Builder
-    public TrainerAddress(int city, int town, Trainer trainer) {
+    public TrainerAddress(String city, String town, Trainer trainer) {
         this.city = city;
         this.town = town;
         this.trainer = trainer;

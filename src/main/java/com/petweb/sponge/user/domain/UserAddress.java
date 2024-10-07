@@ -15,14 +15,14 @@ public class UserAddress {
     @Id
     @GeneratedValue
     private Long id;
-    private int city;
-    private int town;
+    private String  city;
+    private String town;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public UserAddress(int city, int town, User user) {
+    public UserAddress(String city, String town, User user) {
         this.city = city;
         this.town = town;
         this.user = user;

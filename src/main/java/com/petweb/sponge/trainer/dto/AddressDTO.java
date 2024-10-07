@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AddressDTO {
-    private int city;
-    private int town;
+    private String city;
+    private String town;
 }

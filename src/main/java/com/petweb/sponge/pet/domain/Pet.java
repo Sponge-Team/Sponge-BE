@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 @Getter
 @Table(name = "pets")
 @EntityListeners(AuditingEntityListener.class)
+// TODO 주소가 PET에 들어갈 수 있음
 public class Pet {
 
     @Id
